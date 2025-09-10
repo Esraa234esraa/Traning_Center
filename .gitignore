@@ -1,0 +1,28 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build
+bin/
+obj/
+
+# Rider
+.idea/
+
+# DotNet
+*.dll
+*.exe
+*.pdb
+*.log
+*.vsix
+*.nupkg
+*.nuspec
+*.cache
+*.db
+
+# Others
+*.DS_Store
+*.tmp
