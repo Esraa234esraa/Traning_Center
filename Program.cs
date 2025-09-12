@@ -1,18 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
-using Microsoft.EntityFrameworkCore;
-using TrainingCenterAPI.Data;
-using TrainingCenterAPI.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using TrainingCenterAPI.Services.Auth;
-using TrainingCenterAPI.Configurations.JwtService;
-using TrainingCenterAPI.Services.Booking;
-using TrainingCenterAPI.Services.Implementations;
-using TrainingCenterAPI.Services.Interfaces;
-using TrainingCenterAPI.Services.Teacher;
+﻿using Microsoft.OpenApi.Models;
+using TrainingCenterAPI.Services.Student;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +57,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 
 
 //builder.Services.AddScoped<IOtpService, OtpService>();
@@ -84,8 +72,22 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Training Center API", Version = "v1" });
+});
 
 var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Training Center API V1");
+        c.RoutePrefix = string.Empty; // Swagger على الـ root
+    });
+}
 
 if (app.Environment.IsDevelopment())
 {

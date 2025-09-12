@@ -1,9 +1,4 @@
-﻿using TrainingCenterAPI.DTOs.Booking;
-using TrainingCenterAPI.Models;
-using TrainingCenterAPI.Services.Booking;
-using TrainingCenterAPI.Data;
-using Microsoft.EntityFrameworkCore;
-using TrainingCenterAPI.Responses;
+﻿
 
 public class BookingService : IBookingService
 {

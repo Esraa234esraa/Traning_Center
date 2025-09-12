@@ -1,14 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using TrainingCenterAPI.Data;
-using TrainingCenterAPI.DTOs;
-using TrainingCenterAPI.DTOs.Admin;
-using TrainingCenterAPI.DTOs.Auth;
-using TrainingCenterAPI.DTOs.Teacher;
-using TrainingCenterAPI.Models;
-using TrainingCenterAPI.Responses;
-
-namespace TrainingCenterAPI.Services.Auth
+﻿namespace TrainingCenterAPI.Services.Auth
 {
     public class AuthService : IAuthService
     {
@@ -28,7 +18,7 @@ namespace TrainingCenterAPI.Services.Auth
 
         }
 
-    public async Task<ResponseModel<RegisterResponseDto>> RegisterAsync(RegisterDto model)
+        public async Task<ResponseModel<RegisterResponseDto>> RegisterAsync(RegisterDto model)
         {
             Console.WriteLine("Step 1: Checking existing user...");
             var existingUser = await _userManager.FindByEmailAsync(model.Email);
@@ -176,13 +166,13 @@ namespace TrainingCenterAPI.Services.Auth
             var result = admins
                 .Where(a => a.IsActive)
                 .Select(a => new AdminDto
-            {
-                Id = a.Id,
-                FullName = a.FullName,
-                Email = a.Email,
-                PhoneNumber = a.PhoneNumber,
-                CreatedAt = a.CreatedAt
-            }).ToList();
+                {
+                    Id = a.Id,
+                    FullName = a.FullName,
+                    Email = a.Email,
+                    PhoneNumber = a.PhoneNumber,
+                    CreatedAt = a.CreatedAt
+                }).ToList();
 
             return ResponseModel<List<AdminDto>>.SuccessResponse(result);
         }

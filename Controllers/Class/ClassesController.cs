@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TrainingCenterAPI.Services.Interfaces;
-using TrainingCenterAPI.DTOs.Teacher;
-using TrainingCenterAPI.Responses;
 
 namespace TrainingCenterAPI.Controllers
 {
@@ -54,6 +51,15 @@ namespace TrainingCenterAPI.Controllers
         {
             var result = await _classService.UpdateStudentInClassAsync(classId, studentId, isPaid);
             return Ok(result);
+        }
+        [HttpGet("GetAllClassesByTeacherId")]
+        public async Task<IActionResult> GetAllClassesByTeacherId(Guid teacherId)
+        {
+
+            var result = await _classService.GetAllClassesByTeacherId(teacherId);
+            return Ok(result);
+
+
         }
     }
 }
