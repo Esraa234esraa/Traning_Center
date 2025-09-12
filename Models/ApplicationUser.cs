@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 
 namespace TrainingCenterAPI.Models
 {
@@ -37,7 +36,9 @@ namespace TrainingCenterAPI.Models
 
         // Navigation property (nullable لتجنب المشاكل إن لم يكن معلّق)
         public TeacherDetails? TeacherDetails { get; set; }
+        public ICollection<StudentDetails> StudentDetails = new HashSet<StudentDetails>();
         public ICollection<WaitingList> WaitingList { get; set; }
+        public ICollection<StudentClass> Classes { get; set; } = new List<StudentClass>();
 
     }
 }

@@ -1,9 +1,4 @@
-﻿using TrainingCenterAPI.DTOs.Booking;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TrainingCenterAPI.Responses;
-
-namespace TrainingCenterAPI.Services.Booking
+﻿namespace TrainingCenterAPI.Services.Booking
 {
     public interface IBookingService
     {

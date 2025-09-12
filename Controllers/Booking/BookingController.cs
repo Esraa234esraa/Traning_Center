@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TrainingCenterAPI.DTOs.Booking;
-using TrainingCenterAPI.Services.Booking;
-using System.Threading.Tasks;
 
 [ApiController]
 [Route("api/[controller]")]

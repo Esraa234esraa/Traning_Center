@@ -17,7 +17,7 @@ namespace TrainingCenterAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "8.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -37,7 +37,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Level");
+                    b.ToTable("levels");
 
                     b.HasData(
                         new
@@ -441,6 +441,9 @@ namespace TrainingCenterAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ClassId")
                         .HasColumnType("uniqueidentifier");
 
@@ -458,6 +461,8 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("ClassId");
 
                     b.HasIndex("LevelId");
@@ -465,6 +470,42 @@ namespace TrainingCenterAPI.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentClasses");
+                });
+
+            modelBuilder.Entity("TrainingCenterAPI.Models.StudentDetails", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CourseName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("studentStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("studentDetails");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.TeacherDetails", b =>
@@ -632,6 +673,10 @@ namespace TrainingCenterAPI.Migrations
 
             modelBuilder.Entity("TrainingCenterAPI.Models.StudentClass", b =>
                 {
+                    b.HasOne("TrainingCenterAPI.Models.ApplicationUser", null)
+                        .WithMany("Classes")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("TrainingCenterAPI.Models.Classes", "Class")
                         .WithMany("StudentClasses")
                         .HasForeignKey("ClassId")
@@ -655,6 +700,17 @@ namespace TrainingCenterAPI.Migrations
                     b.Navigation("Level");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("TrainingCenterAPI.Models.StudentDetails", b =>
+                {
+                    b.HasOne("TrainingCenterAPI.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.TeacherDetails", b =>
@@ -700,6 +756,8 @@ namespace TrainingCenterAPI.Migrations
 
             modelBuilder.Entity("TrainingCenterAPI.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Classes");
+
                     b.Navigation("TeacherDetails");
 
                     b.Navigation("WaitingList");

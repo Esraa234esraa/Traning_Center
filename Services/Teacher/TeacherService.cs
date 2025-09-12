@@ -1,15 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using TrainingCenterAPI.Data;
-using TrainingCenterAPI.DTOs.Teacher;
-using TrainingCenterAPI.Models;
-using TrainingCenterAPI.Responses;
-using TrainingCenterAPI.Services;
-using TrainingCenterAPI.Services.Teacher;
+﻿
 
 namespace TrainingCenterAPI.Services.Implementations
 {
@@ -173,7 +162,7 @@ namespace TrainingCenterAPI.Services.Implementations
                 });
             }
 
-         
+
             // 4️⃣ حفظ في قاعدة البيانات
             _context.TeacherDetails.Add(teacher);
             await _context.SaveChangesAsync();

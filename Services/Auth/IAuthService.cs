@@ -1,10 +1,4 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using TrainingCenterAPI.DTOs;
-using TrainingCenterAPI.DTOs.Admin;
-using TrainingCenterAPI.DTOs.Auth;
-using TrainingCenterAPI.DTOs.Teacher;
-using TrainingCenterAPI.Responses;
+﻿
 
 namespace TrainingCenterAPI.Services.Auth
 {

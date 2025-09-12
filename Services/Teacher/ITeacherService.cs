@@ -1,8 +1,4 @@
-﻿using TrainingCenterAPI.DTOs.Teacher;
-using TrainingCenterAPI.Responses;
-
-
-namespace TrainingCenterAPI.Services.Teacher
+﻿namespace TrainingCenterAPI.Services.Teacher
 {
     public interface ITeacherService
     {

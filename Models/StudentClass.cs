@@ -15,7 +15,13 @@ namespace TrainingCenterAPI.Models
 
         // 🔗 علاقة مع Student (ApplicationUser)
         [Required]
-        public Guid StudentId { get; set; }
+
+
+        public Guid StudentId { get; set; }   // FK to ApplicationUser
+
+        [ForeignKey(nameof(StudentId))]
+
+
         public ApplicationUser Student { get; set; }
 
         // ✅ Soft Delete

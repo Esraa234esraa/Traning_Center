@@ -1,9 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using TrainingCenterAPI.Models;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace TrainingCenterAPI.Data
 {
@@ -21,6 +16,9 @@ namespace TrainingCenterAPI.Data
         public DbSet<Classes> Classes { get; set; }
         public DbSet<StudentClass> StudentClasses { get; set; }
         public DbSet<WaitingList> WaitingList { get; set; }
+        public DbSet<StudentDetails> studentDetails { get; set; }
+        public DbSet<Level> levels { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

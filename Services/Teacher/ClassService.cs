@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TrainingCenterAPI.Data;
-using TrainingCenterAPI.DTOs.Teacher;
-using TrainingCenterAPI.Models;
-using TrainingCenterAPI.Responses;
-using TrainingCenterAPI.Services.Interfaces;
+﻿using TrainingCenterAPI.DTOs.Classes;
 
 namespace TrainingCenterAPI.Services.Implementations
 {
@@ -201,6 +196,21 @@ namespace TrainingCenterAPI.Services.Implementations
 
             return ResponseModel<StudentDto>.SuccessResponse(dto, "تم تحديث بيانات الطالب في الحصة");
         }
+        public async Task<ResponseModel<List<AllClassesForTeacherDto>>> GetAllClassesByTeacherId(Guid teacherId)
+        {
+            var classes = await _context.Classes
+                .Where(x => x.TeacherId == teacherId && x.Status == ClassStatus.Active)
+                .Select(x => new AllClassesForTeacherDto
+                {
+                    Id = x.Id,
+                    PackageSize = x.PackageSize,
 
+                    Status = x.Status,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+
+                }).ToListAsync();
+            return ResponseModel<List<AllClassesForTeacherDto>>.SuccessResponse(classes, "تمت رجوع الحصص الخاصة بالمعلم بنجاح ");
+        }
     }
 }
