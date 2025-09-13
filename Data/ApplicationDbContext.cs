@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using TrainingCenterAPI.Models.Students;
 
 namespace TrainingCenterAPI.Data
 {
@@ -18,6 +19,9 @@ namespace TrainingCenterAPI.Data
         public DbSet<WaitingList> WaitingList { get; set; }
         public DbSet<StudentDetails> studentDetails { get; set; }
         public DbSet<Level> levels { get; set; }
+        public DbSet<NewStudent> newStudents { get; set; }
+
+
 
 
 
@@ -37,13 +41,22 @@ namespace TrainingCenterAPI.Data
                 new Level { Id = Guid.Parse("77777777-7777-7777-7777-777777777777"), LevelNumber = 7, Name = "المستوى السابع" }
             );
 
+
+
+
+            modelBuilder.Entity<NewStudent>()
+                .HasIndex(s => new { s.Date, s.Time })
+                .IsUnique(); // ensures uniqueness at DB level
+
+
+
             // -------------------
             // علاقات Classes -> Level
             modelBuilder.Entity<Classes>()
-                .HasOne(c => c.Level)
-                .WithMany()
-                .HasForeignKey(c => c.LevelId)
-                .OnDelete(DeleteBehavior.Restrict);
+                    .HasOne(c => c.Level)
+                    .WithMany()
+                    .HasForeignKey(c => c.LevelId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
             // علاقات StudentClass -> Level
             modelBuilder.Entity<StudentClass>()
@@ -95,6 +108,8 @@ namespace TrainingCenterAPI.Data
             modelBuilder.Entity<StudentClass>().HasQueryFilter(sc => sc.DeletedAt == null);
             modelBuilder.Entity<WaitingList>().HasQueryFilter(w => w.DeletedAt == null);
         }
+
+
 
     }
 }

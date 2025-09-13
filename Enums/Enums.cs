@@ -11,5 +11,14 @@
 
 
         }
+        public enum NewStudentStatus
+        {
+
+            New,
+            waiting,   // انتظار
+            refused   //مرفوض
+
+
+        }
     }
 }

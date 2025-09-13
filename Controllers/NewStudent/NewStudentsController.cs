@@ -1,0 +1,47 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using TrainingCenterAPI.DTOs.NewStudents;
+using TrainingCenterAPI.Services.NewStudentsService;
+
+namespace TrainingCenterAPI.Controllers.NewStudent
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class NewStudentsController : ControllerBase
+    {
+        private readonly INewStudentsService _studentsService;
+        public NewStudentsController(INewStudentsService newStudentsService)
+        {
+            _studentsService = newStudentsService;
+        }
+        [HttpGet("GetAllNewStudent")]
+        public async Task<IActionResult> GetAllNewStudent()
+        {
+
+            return Ok(await _studentsService.GetAllNewStudent());
+        }
+        [HttpPost("AddNewStudent")]
+        public async Task<IActionResult> AddNewStudent(PostNewStudentDTO dTO)
+        {
+
+            return Ok(await _studentsService.AddNewStudent(dTO));
+        }
+        [HttpPut("PutNewStudent/{Id}")]
+        public async Task<IActionResult> PutNewStudent(PutNewStudentDTO dTO, Guid Id)
+        {
+
+            return Ok(await _studentsService.PutNewStudent(dTO, Id));
+        }
+        [HttpPut("MoveNewStudentToWaitingStudent/{Id}")]
+        public async Task<IActionResult> MoveNewStudentToWaitingStudent(Guid Id)
+        {
+
+            return Ok(await _studentsService.MoveNewStudentToWaitingStudent(Id));
+        }
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> PutNewStudent(Guid Id)
+        {
+
+            return Ok(await _studentsService.DeleteNewStudent(Id));
+        }
+    }
+}

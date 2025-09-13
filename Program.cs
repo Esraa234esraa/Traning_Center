@@ -1,5 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
-using TrainingCenterAPI.Services.Student;
+using TrainingCenterAPI.Services.NewStudentsService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,7 +57,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
-builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<INewStudentsService, NewStudentsService>();
 
 
 //builder.Services.AddScoped<IOtpService, OtpService>();
