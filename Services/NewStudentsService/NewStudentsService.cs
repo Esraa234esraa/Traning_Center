@@ -79,6 +79,7 @@ namespace TrainingCenterAPI.Services.NewStudentsService
                     City = item.City,
                     Date = item.Date,
                     Time = item.Time,
+                    status = item.status,
                     CreatedAt = item.CreatedAt
 
                 }).ToListAsync();
@@ -92,7 +93,33 @@ namespace TrainingCenterAPI.Services.NewStudentsService
 
         }
 
+        public async Task<ResponseModel<List<GetAllNewStudentDTO>>> GetAllWaitingNewStudent()
+        {
 
+            var newStudents = await _context.newStudents.Where(x => x.status == NewStudentStatus.waiting && x.IsDeleted == false)
+                .Select(item => new GetAllNewStudentDTO
+                {
+
+                    Id = item.Id,
+                    StudentName = item.StudentName,
+                    PhoneNumber = item.PhoneNumber,
+                    Gender = item.Gender,
+                    City = item.City,
+                    Date = item.Date,
+                    Time = item.Time,
+                    status = item.status,
+                    CreatedAt = item.CreatedAt
+
+
+                }).ToListAsync();
+            if (newStudents == null || newStudents.Count() <= 0)
+            {
+
+                return ResponseModel<List<GetAllNewStudentDTO>>.FailResponse(" لاتوجد طلاب في الانتظار");
+            }
+
+            return ResponseModel<List<GetAllNewStudentDTO>>.SuccessResponse(newStudents, "تم رجوع الطلاب قائمة  الانتظار  بنجاح");
+        }
 
         public async Task<ResponseModel<string>> MoveNewStudentToWaitingStudent(Guid Id)
         {

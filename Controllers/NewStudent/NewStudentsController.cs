@@ -19,6 +19,15 @@ namespace TrainingCenterAPI.Controllers.NewStudent
 
             return Ok(await _studentsService.GetAllNewStudent());
         }
+
+        [HttpGet("GetAllWaitingNewStudent")]
+        public async Task<IActionResult> GetAllWaitingNewStudent()
+        {
+
+            return Ok(await _studentsService.GetAllWaitingNewStudent());
+        }
+
+
         [HttpPost("AddNewStudent")]
         public async Task<IActionResult> AddNewStudent(PostNewStudentDTO dTO)
         {
