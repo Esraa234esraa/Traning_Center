@@ -20,5 +20,14 @@
 
 
         }
+
+        public enum evaluationOwnerType
+        {
+
+            Student,  //طالب
+            Guardian   //ولي امر 
+
+        }
+
     }
 }
