@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using TrainingCenterAPI.Models.evaluations;
 using TrainingCenterAPI.Models.Students;
 
 namespace TrainingCenterAPI.Data
@@ -20,6 +21,10 @@ namespace TrainingCenterAPI.Data
         public DbSet<StudentDetails> studentDetails { get; set; }
         public DbSet<Level> levels { get; set; }
         public DbSet<NewStudent> newStudents { get; set; }
+        public DbSet<Evaluation> evaluations { get; set; }
+
+
+
 
 
 
@@ -89,11 +94,11 @@ namespace TrainingCenterAPI.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // WaitingList -> Class
-            modelBuilder.Entity<WaitingList>()
-                .HasOne(w => w.Class)
-                .WithMany(c => c.WaitingList)
-                .HasForeignKey(w => w.ClassId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<WaitingList>()
+            //    .HasOne(w => w.Class)
+            //    .WithMany(c => c.WaitingList)
+            //    .HasForeignKey(w => w.ClassId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
             // WaitingList -> Student
             modelBuilder.Entity<WaitingList>()

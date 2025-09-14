@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using TrainingCenterAPI.Services.EvaluationsService;
 using TrainingCenterAPI.Services.NewStudentsService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,6 +59,8 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<INewStudentsService, NewStudentsService>();
+builder.Services.AddScoped<IEvaluationService, EvaluationService>();
+
 
 
 //builder.Services.AddScoped<IOtpService, OtpService>();

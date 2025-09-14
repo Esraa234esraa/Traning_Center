@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TrainingCenterAPI.Models.Courses;
+using TrainingCenterAPI.Models.Students;
 
 namespace TrainingCenterAPI.Models
 {
@@ -27,8 +29,14 @@ namespace TrainingCenterAPI.Models
         public Guid LevelId { get; set; }
         [ForeignKey("LevelId")]
         public Level Level { get; set; }
+
+        public Guid CourseId { get; set; }
+        [ForeignKey("CourseId")]
+        public Course Course { get; set; }
+        //must remove this
         public ICollection<StudentClass> StudentClasses { get; set; } = new List<StudentClass>();
-        public ICollection<WaitingList> WaitingList { get; set; }
+        public virtual ICollection<CurrentStudentClass> GetCurrentStudentClasses { get; set; } = new HashSet<CurrentStudentClass>();
+
 
     }
 }
