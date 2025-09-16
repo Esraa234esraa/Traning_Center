@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrainingCenterAPI.Models
 {
@@ -30,15 +29,13 @@ namespace TrainingCenterAPI.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string Role { get; set; } = "Student";
 
-        public Guid? LevelId { get; set; }
-        [ForeignKey("LevelId")]
-        public Level Level { get; set; }
+
 
         // Navigation property (nullable لتجنب المشاكل إن لم يكن معلّق)
         public TeacherDetails? TeacherDetails { get; set; }
-        public ICollection<StudentDetails> StudentDetails = new HashSet<StudentDetails>();
-        public ICollection<WaitingList> WaitingList { get; set; }
-        public ICollection<StudentClass> Classes { get; set; } = new List<StudentClass>();
+
+
+
 
     }
 }

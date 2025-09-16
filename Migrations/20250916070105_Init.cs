@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TrainingCenterAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitCreate : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +24,38 @@ namespace TrainingCenterAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerifyCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsVerified = table.Column<bool>(type: "bit", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,16 +77,80 @@ namespace TrainingCenterAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "levels",
+                name: "Course",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LevelNumber = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsVisible = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_levels", x => x.Id);
+                    table.PrimaryKey("PK_Course", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "currents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_currents", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "evaluations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    evaluationOwner = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Opnion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    evaluationOwnerType = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_evaluations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "newStudents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Time = table.Column<TimeOnly>(type: "time", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_newStudents", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,51 +172,6 @@ namespace TrainingCenterAPI.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VerifyCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsVerified = table.Column<bool>(type: "bit", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LevelId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_levels_LevelId",
-                        column: x => x.LevelId,
-                        principalTable: "levels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_levels_LevelId1",
-                        column: x => x.LevelId1,
-                        principalTable: "levels",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -234,25 +284,21 @@ namespace TrainingCenterAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "studentDetails",
+                name: "levels",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CourseName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    studentStatus = table.Column<int>(type: "int", nullable: false)
+                    LevelNumber = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_studentDetails", x => x.Id);
+                    table.PrimaryKey("PK_levels", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_studentDetails_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_levels_Course_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Course",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -262,11 +308,12 @@ namespace TrainingCenterAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CourseName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -277,6 +324,43 @@ namespace TrainingCenterAPI.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TeacherDetails_Course_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Course",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "bouquets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BouquetName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentsPackageCount = table.Column<int>(type: "int", nullable: false),
+                    Money = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_bouquets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_bouquets_Course_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Course",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_bouquets_levels_LevelId",
+                        column: x => x.LevelId,
+                        principalTable: "levels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -285,7 +369,6 @@ namespace TrainingCenterAPI.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PackageSize = table.Column<int>(type: "int", nullable: true),
                     CurrentStudentsCount = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -293,6 +376,7 @@ namespace TrainingCenterAPI.Migrations
                     ClassTime = table.Column<TimeSpan>(type: "time", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BouquetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LevelId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -303,7 +387,13 @@ namespace TrainingCenterAPI.Migrations
                         column: x => x.TeacherId,
                         principalTable: "TeacherDetails",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Classes_bouquets_BouquetId",
+                        column: x => x.BouquetId,
+                        principalTable: "bouquets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Classes_levels_LevelId",
                         column: x => x.LevelId,
@@ -318,91 +408,42 @@ namespace TrainingCenterAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudentClasses",
+                name: "CurrentStudentClasses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsPaid = table.Column<bool>(type: "bit", nullable: false),
-                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentClasses", x => x.Id);
+                    table.PrimaryKey("PK_CurrentStudentClasses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StudentClasses_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_StudentClasses_AspNetUsers_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_StudentClasses_Classes_ClassId",
+                        name: "FK_CurrentStudentClasses_Classes_ClassId",
                         column: x => x.ClassId,
                         principalTable: "Classes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentClasses_levels_LevelId",
+                        name: "FK_CurrentStudentClasses_currents_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "currents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CurrentStudentClasses_levels_LevelId",
                         column: x => x.LevelId,
                         principalTable: "levels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "WaitingList",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AddedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WaitingList", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WaitingList_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_WaitingList_AspNetUsers_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_WaitingList_Classes_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
 
-            migrationBuilder.InsertData(
-                table: "levels",
-                columns: new[] { "Id", "LevelNumber", "Name" },
-                values: new object[,]
-                {
-                    { new Guid("11111111-1111-1111-1111-111111111111"), 1, "المستوى الأول" },
-                    { new Guid("22222222-2222-2222-2222-222222222222"), 2, "المستوى الثاني" },
-                    { new Guid("33333333-3333-3333-3333-333333333333"), 3, "المستوى الثالث" },
-                    { new Guid("44444444-4444-4444-4444-444444444444"), 4, "المستوى الرابع" },
-                    { new Guid("55555555-5555-5555-5555-555555555555"), 5, "المستوى الخامس" },
-                    { new Guid("66666666-6666-6666-6666-666666666666"), 6, "المستوى السادس" },
-                    { new Guid("77777777-7777-7777-7777-777777777777"), 7, "المستوى السابع" }
-                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -437,21 +478,26 @@ namespace TrainingCenterAPI.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_LevelId",
-                table: "AspNetUsers",
-                column: "LevelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_LevelId1",
-                table: "AspNetUsers",
-                column: "LevelId1");
-
-            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_bouquets_CourseId",
+                table: "bouquets",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_bouquets_LevelId",
+                table: "bouquets",
+                column: "LevelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Classes_BouquetId",
+                table: "Classes",
+                column: "BouquetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Classes_LevelId",
@@ -469,55 +515,46 @@ namespace TrainingCenterAPI.Migrations
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CurrentStudentClasses_ClassId",
+                table: "CurrentStudentClasses",
+                column: "ClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CurrentStudentClasses_LevelId",
+                table: "CurrentStudentClasses",
+                column: "LevelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CurrentStudentClasses_StudentId",
+                table: "CurrentStudentClasses",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_levels_CourseId",
+                table: "levels",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_newStudents_Date_Time",
+                table: "newStudents",
+                columns: new[] { "Date", "Time" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OtpVerifications_UserId",
                 table: "OtpVerifications",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentClasses_ApplicationUserId",
-                table: "StudentClasses",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StudentClasses_ClassId",
-                table: "StudentClasses",
-                column: "ClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StudentClasses_LevelId",
-                table: "StudentClasses",
-                column: "LevelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StudentClasses_StudentId",
-                table: "StudentClasses",
-                column: "StudentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_studentDetails_UserId",
-                table: "studentDetails",
-                column: "UserId");
+                name: "IX_TeacherDetails_CourseId",
+                table: "TeacherDetails",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TeacherDetails_UserId",
                 table: "TeacherDetails",
                 column: "UserId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WaitingList_ApplicationUserId",
-                table: "WaitingList",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WaitingList_ClassId",
-                table: "WaitingList",
-                column: "ClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WaitingList_StudentId",
-                table: "WaitingList",
-                column: "StudentId");
         }
 
         /// <inheritdoc />
@@ -542,16 +579,16 @@ namespace TrainingCenterAPI.Migrations
                 name: "Bookings");
 
             migrationBuilder.DropTable(
+                name: "CurrentStudentClasses");
+
+            migrationBuilder.DropTable(
+                name: "evaluations");
+
+            migrationBuilder.DropTable(
+                name: "newStudents");
+
+            migrationBuilder.DropTable(
                 name: "OtpVerifications");
-
-            migrationBuilder.DropTable(
-                name: "StudentClasses");
-
-            migrationBuilder.DropTable(
-                name: "studentDetails");
-
-            migrationBuilder.DropTable(
-                name: "WaitingList");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -560,13 +597,22 @@ namespace TrainingCenterAPI.Migrations
                 name: "Classes");
 
             migrationBuilder.DropTable(
+                name: "currents");
+
+            migrationBuilder.DropTable(
                 name: "TeacherDetails");
+
+            migrationBuilder.DropTable(
+                name: "bouquets");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "levels");
+
+            migrationBuilder.DropTable(
+                name: "Course");
         }
     }
 }

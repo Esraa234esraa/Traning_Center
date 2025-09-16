@@ -1,17 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TrainingCenterAPI.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+using TrainingCenterAPI.Models.BaseEntitys;
+using TrainingCenterAPI.Models.Courses;
 
-public class Level
+public class Level : BaseEntity
 {
-    [Key]
-    public Guid Id { get; set; }
+
 
     [Required]
     public int LevelNumber { get; set; } // من 1 إلى 7
 
-    public string Name { get; set; }     // اختياري: "Beginner", "Intermediate" ...
+    public string? Name { get; set; }     // اختياري: "Beginner", "Intermediate" ...
 
     // ✅ علاقات
-    public ICollection<ApplicationUser> Students { get; set; }
+    public Guid CourseId { get; set; }
+    [ForeignKey("CourseId")]
+    public Course Course { get; set; }
     public ICollection<Classes> Classes { get; set; }
 }

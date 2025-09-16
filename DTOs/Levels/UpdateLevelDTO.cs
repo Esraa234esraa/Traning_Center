@@ -2,18 +2,13 @@
 
 namespace TrainingCenterAPI.DTOs.Levels
 {
-    public class GetAllLevelsDTO
+    public class UpdateLevelDTO
     {
-
-        public Guid Id { get; set; }
 
         [Required]
         public int LevelNumber { get; set; } // من 1 إلى 7
 
-        public string? Name { get; set; }
-
-
-        public string CourseName { get; set; }
-
+        public string Name { get; set; }
+        public Guid CourseId { get; set; }
     }
 }
