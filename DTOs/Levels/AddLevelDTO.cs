@@ -9,7 +9,9 @@ namespace TrainingCenterAPI.DTOs.Levels
         [Required]
         public int LevelNumber { get; set; } // من 1 إلى 7
 
-        public string Name { get; set; }     // اختياري: "Beginner", "Intermediate" ...
+        public string Name { get; set; }
+        public Guid CourseId { get; set; }
+        // اختياري: "Beginner", "Intermediate" ...
 
 
     }

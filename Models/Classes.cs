@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TrainingCenterAPI.Models.Courses;
+using TrainingCenterAPI.Models.Bouquets;
 using TrainingCenterAPI.Models.Students;
 
 namespace TrainingCenterAPI.Models
@@ -15,7 +15,7 @@ namespace TrainingCenterAPI.Models
         [ForeignKey("TeacherId")]
         public TeacherDetails Teacher { get; set; }
 
-        public int? PackageSize { get; set; } // 1 طالب - 2 طالب...
+        // public int? PackageSize { get; set; } // 1 طالب - 2 طالب...
 
         public int CurrentStudentsCount { get; set; } = 0;
 
@@ -30,11 +30,14 @@ namespace TrainingCenterAPI.Models
         [ForeignKey("LevelId")]
         public Level Level { get; set; }
 
-        public Guid CourseId { get; set; }
-        [ForeignKey("CourseId")]
-        public Course Course { get; set; }
+
+        public Guid BouquetId { get; set; }
+        [ForeignKey("BouquetId")]
+        public Bouquet Bouquet { get; set; }
+
+
         //must remove this
-        public ICollection<StudentClass> StudentClasses { get; set; } = new List<StudentClass>();
+
         public virtual ICollection<CurrentStudentClass> GetCurrentStudentClasses { get; set; } = new HashSet<CurrentStudentClass>();
 
 

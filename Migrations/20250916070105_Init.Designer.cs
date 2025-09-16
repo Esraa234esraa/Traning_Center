@@ -12,8 +12,8 @@ using TrainingCenterAPI.Data;
 namespace TrainingCenterAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250912114309_InitCreate")]
-    partial class InitCreate
+    [Migration("20250916070105_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,9 @@ namespace TrainingCenterAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("LevelNumber")
                         .HasColumnType("int");
 
@@ -40,48 +43,57 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CourseId");
+
                     b.ToTable("levels");
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CourseId = new Guid("00000000-0000-0000-0000-000000000000"),
                             LevelNumber = 1,
                             Name = "المستوى الأول"
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CourseId = new Guid("00000000-0000-0000-0000-000000000000"),
                             LevelNumber = 2,
                             Name = "المستوى الثاني"
                         },
                         new
                         {
                             Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            CourseId = new Guid("00000000-0000-0000-0000-000000000000"),
                             LevelNumber = 3,
                             Name = "المستوى الثالث"
                         },
                         new
                         {
                             Id = new Guid("44444444-4444-4444-4444-444444444444"),
+                            CourseId = new Guid("00000000-0000-0000-0000-000000000000"),
                             LevelNumber = 4,
                             Name = "المستوى الرابع"
                         },
                         new
                         {
                             Id = new Guid("55555555-5555-5555-5555-555555555555"),
+                            CourseId = new Guid("00000000-0000-0000-0000-000000000000"),
                             LevelNumber = 5,
                             Name = "المستوى الخامس"
                         },
                         new
                         {
                             Id = new Guid("66666666-6666-6666-6666-666666666666"),
+                            CourseId = new Guid("00000000-0000-0000-0000-000000000000"),
                             LevelNumber = 6,
                             Name = "المستوى السادس"
                         },
                         new
                         {
                             Id = new Guid("77777777-7777-7777-7777-777777777777"),
+                            CourseId = new Guid("00000000-0000-0000-0000-000000000000"),
                             LevelNumber = 7,
                             Name = "المستوى السابع"
                         });
@@ -288,12 +300,6 @@ namespace TrainingCenterAPI.Migrations
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("LevelId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("LevelId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -341,10 +347,6 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LevelId");
-
-                    b.HasIndex("LevelId1");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -391,10 +393,52 @@ namespace TrainingCenterAPI.Migrations
                     b.ToTable("Bookings");
                 });
 
+            modelBuilder.Entity("TrainingCenterAPI.Models.Bouquets.Bouquet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BouquetName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LevelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Money")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("StudentsPackageCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("LevelId");
+
+                    b.ToTable("bouquets");
+                });
+
             modelBuilder.Entity("TrainingCenterAPI.Models.Classes", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BouquetId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<TimeSpan?>("ClassTime")
@@ -415,9 +459,6 @@ namespace TrainingCenterAPI.Migrations
                     b.Property<Guid?>("LevelId1")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("PackageSize")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -429,6 +470,8 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BouquetId");
+
                     b.HasIndex("LevelId");
 
                     b.HasIndex("LevelId1");
@@ -438,20 +481,98 @@ namespace TrainingCenterAPI.Migrations
                     b.ToTable("Classes");
                 });
 
-            modelBuilder.Entity("TrainingCenterAPI.Models.StudentClass", b =>
+            modelBuilder.Entity("TrainingCenterAPI.Models.Courses.Course", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ApplicationUserId")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Course");
+                });
+
+            modelBuilder.Entity("TrainingCenterAPI.Models.Students.CurrentStudent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("currents");
+                });
+
+            modelBuilder.Entity("TrainingCenterAPI.Models.Students.CurrentStudentClass", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClassId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
@@ -464,30 +585,29 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("ClassId");
 
                     b.HasIndex("LevelId");
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentClasses");
+                    b.ToTable("CurrentStudentClasses");
                 });
 
-            modelBuilder.Entity("TrainingCenterAPI.Models.StudentDetails", b =>
+            modelBuilder.Entity("TrainingCenterAPI.Models.Students.NewStudent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CourseName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -495,20 +615,29 @@ namespace TrainingCenterAPI.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("studentStatus")
+                    b.Property<string>("StudentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeOnly>("Time")
+                        .HasColumnType("time");
+
+                    b.Property<int>("status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("Date", "Time")
+                        .IsUnique();
 
-                    b.ToTable("studentDetails");
+                    b.ToTable("newStudents");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.TeacherDetails", b =>
@@ -521,6 +650,9 @@ namespace TrainingCenterAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("CourseName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -537,42 +669,57 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CourseId");
+
                     b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("TeacherDetails");
                 });
 
-            modelBuilder.Entity("TrainingCenterAPI.Models.WaitingList", b =>
+            modelBuilder.Entity("TrainingCenterAPI.Models.evaluations.Evaluation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("AddedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ClassId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Opnion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("evaluationOwner")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("evaluationOwnerType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.ToTable("evaluations");
+                });
 
-                    b.HasIndex("ClassId");
+            modelBuilder.Entity("Level", b =>
+                {
+                    b.HasOne("TrainingCenterAPI.Models.Courses.Course", "Course")
+                        .WithMany("Levels")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("WaitingList");
+                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -637,22 +784,33 @@ namespace TrainingCenterAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TrainingCenterAPI.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TrainingCenterAPI.Models.Bouquets.Bouquet", b =>
                 {
+                    b.HasOne("TrainingCenterAPI.Models.Courses.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Level", "Level")
                         .WithMany()
                         .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Level", null)
-                        .WithMany("Students")
-                        .HasForeignKey("LevelId1");
+                    b.Navigation("Course");
 
                     b.Navigation("Level");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.Classes", b =>
                 {
+                    b.HasOne("TrainingCenterAPI.Models.Bouquets.Bouquet", "Bouquet")
+                        .WithMany("Classes")
+                        .HasForeignKey("BouquetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Level", "Level")
                         .WithMany()
                         .HasForeignKey("LevelId")
@@ -669,33 +827,31 @@ namespace TrainingCenterAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Bouquet");
+
                     b.Navigation("Level");
 
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("TrainingCenterAPI.Models.StudentClass", b =>
+            modelBuilder.Entity("TrainingCenterAPI.Models.Students.CurrentStudentClass", b =>
                 {
-                    b.HasOne("TrainingCenterAPI.Models.ApplicationUser", null)
-                        .WithMany("Classes")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("TrainingCenterAPI.Models.Classes", "Class")
-                        .WithMany("StudentClasses")
+                        .WithMany("GetCurrentStudentClasses")
                         .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Level", "Level")
                         .WithMany()
                         .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TrainingCenterAPI.Models.ApplicationUser", "Student")
-                        .WithMany()
+                    b.HasOne("TrainingCenterAPI.Models.Students.CurrentStudent", "Student")
+                        .WithMany("GetCurrentStudentClasses")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Class");
@@ -705,72 +861,55 @@ namespace TrainingCenterAPI.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("TrainingCenterAPI.Models.StudentDetails", b =>
+            modelBuilder.Entity("TrainingCenterAPI.Models.TeacherDetails", b =>
                 {
-                    b.HasOne("TrainingCenterAPI.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("TrainingCenterAPI.Models.Courses.Course", "Course")
+                        .WithMany("Teachers")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TrainingCenterAPI.Models.TeacherDetails", b =>
-                {
                     b.HasOne("TrainingCenterAPI.Models.ApplicationUser", "User")
                         .WithOne("TeacherDetails")
                         .HasForeignKey("TrainingCenterAPI.Models.TeacherDetails", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Course");
+
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TrainingCenterAPI.Models.WaitingList", b =>
-                {
-                    b.HasOne("TrainingCenterAPI.Models.ApplicationUser", null)
-                        .WithMany("WaitingList")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("TrainingCenterAPI.Models.Classes", "Class")
-                        .WithMany("WaitingList")
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TrainingCenterAPI.Models.ApplicationUser", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Class");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Level", b =>
                 {
                     b.Navigation("Classes");
-
-                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Classes");
-
                     b.Navigation("TeacherDetails");
+                });
 
-                    b.Navigation("WaitingList");
+            modelBuilder.Entity("TrainingCenterAPI.Models.Bouquets.Bouquet", b =>
+                {
+                    b.Navigation("Classes");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.Classes", b =>
                 {
-                    b.Navigation("StudentClasses");
+                    b.Navigation("GetCurrentStudentClasses");
+                });
 
-                    b.Navigation("WaitingList");
+            modelBuilder.Entity("TrainingCenterAPI.Models.Courses.Course", b =>
+                {
+                    b.Navigation("Levels");
+
+                    b.Navigation("Teachers");
+                });
+
+            modelBuilder.Entity("TrainingCenterAPI.Models.Students.CurrentStudent", b =>
+                {
+                    b.Navigation("GetCurrentStudentClasses");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.TeacherDetails", b =>

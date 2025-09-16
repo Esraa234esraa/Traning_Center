@@ -1,4 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
+using TrainingCenterAPI.Services;
+using TrainingCenterAPI.Services.CoursesServices;
 using TrainingCenterAPI.Services.EvaluationsService;
 using TrainingCenterAPI.Services.NewStudentsService;
 
@@ -56,10 +58,12 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
-builder.Services.AddScoped<IClassService, ClassService>();
-builder.Services.AddScoped<ITeacherService, TeacherService>();
+//builder.Services.AddScoped<IClassService, ClassService>();
+//builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<INewStudentsService, NewStudentsService>();
 builder.Services.AddScoped<IEvaluationService, EvaluationService>();
+builder.Services.AddScoped<ICoursesServices, CoursesService>();
+builder.Services.AddScoped<ILevelService, LevelService>();
 
 
 
