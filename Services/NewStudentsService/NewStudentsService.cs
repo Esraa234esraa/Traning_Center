@@ -17,7 +17,7 @@ namespace TrainingCenterAPI.Services.NewStudentsService
         }
         public async Task<ResponseModel<Guid>> AddNewStudent(PostNewStudentDTO DTO)
         {
-            bool exists = await _context.newStudents.AnyAsync(s => s.Date == DTO.Date && s.Time == DTO.Time);
+            bool exists = await _context.newStudents.AnyAsync(s => s.Date == DTO.Date && s.Time == DTO.Time && s.IsDeleted == false);
 
 
 
@@ -58,6 +58,20 @@ namespace TrainingCenterAPI.Services.NewStudentsService
             {
 
                 return ResponseModel<string>.FailResponse("هذا الطالب غير موجود في الطلاب الجدد");
+            }
+
+            student.IsDeleted = true;
+            _context.newStudents.Update(student);
+            await _context.SaveChangesAsync();
+            return ResponseModel<string>.SuccessResponse(" تم نقل الطالب الى سلة المهملات");
+        }
+        public async Task<ResponseModel<string>> DeleteWaitingStudent(Guid Id)
+        {
+            var student = await _context.newStudents.FirstOrDefaultAsync(x => x.Id == Id && x.status == NewStudentStatus.waiting && x.IsDeleted == false);
+            if (student == null)
+            {
+
+                return ResponseModel<string>.FailResponse("هذا الطالب غير موجود في الطلاب المنتظرين");
             }
 
             student.IsDeleted = true;
@@ -144,6 +158,27 @@ namespace TrainingCenterAPI.Services.NewStudentsService
             {
 
                 return ResponseModel<Guid>.FailResponse("هذا الطالب غير موجود في الطلاب الجدد");
+            }
+
+            student.StudentName = DTO.StudentName;
+            student.PhoneNumber = DTO.PhoneNumber;
+            student.City = DTO.City;
+            student.Date = DTO.Date;
+            student.Time = DTO.Time;
+            student.Gender = DTO.Gender;
+            student.status = NewStudentStatus.New;
+            _context.newStudents.Update(student);
+            await _context.SaveChangesAsync();
+            return ResponseModel<Guid>.SuccessResponse(student.Id, "تمت التعديل بنجاح ");
+        }
+        public async Task<ResponseModel<Guid>> PutWaitingStudent(PutNewStudentDTO DTO, Guid Id)
+        {
+
+            var student = await _context.newStudents.FirstOrDefaultAsync(x => x.Id == Id && x.status == NewStudentStatus.waiting && x.IsDeleted == false);
+            if (student == null)
+            {
+
+                return ResponseModel<Guid>.FailResponse("هذا الطالب غير موجود في الطلاب المنتظرين");
             }
 
             student.StudentName = DTO.StudentName;

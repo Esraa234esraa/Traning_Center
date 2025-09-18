@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainingCenterAPI.Data;
 
@@ -11,9 +12,11 @@ using TrainingCenterAPI.Data;
 namespace TrainingCenterAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250918092339_removeIndex")]
+    partial class removeIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,9 +48,6 @@ namespace TrainingCenterAPI.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -380,9 +380,6 @@ namespace TrainingCenterAPI.Migrations
                     b.Property<int>("StudentsPackageCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
@@ -474,9 +471,6 @@ namespace TrainingCenterAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.ToTable("Course");
@@ -514,9 +508,6 @@ namespace TrainingCenterAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.ToTable("currents");
@@ -548,9 +539,6 @@ namespace TrainingCenterAPI.Migrations
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -597,9 +585,6 @@ namespace TrainingCenterAPI.Migrations
 
                     b.Property<TimeOnly>("Time")
                         .HasColumnType("time");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("status")
                         .HasColumnType("int");
@@ -661,18 +646,12 @@ namespace TrainingCenterAPI.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsVisible")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Opnion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("evaluationOwner")
                         .IsRequired()

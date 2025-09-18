@@ -6,6 +6,9 @@ namespace TrainingCenterAPI.Services.CoursesServices
     public interface ICoursesServices
     {
         Task<ResponseModel<List<GetAllCoursesDto>>> GetAllCoursesAsync();
+        Task<ResponseModel<List<GetAllCoursesDto>>> GetOnlyVisibleCoursesAsync();
+
+
 
         Task<ResponseModel<Course>> GetCourseByIdAsync(Guid id);
         Task<ResponseModel<Guid>> AddCourseAsync(AddCoursesDto courseDto);

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TrainingCenterAPI.DTOs.NewStudents;
+﻿using TrainingCenterAPI.DTOs.NewStudents;
 using TrainingCenterAPI.Services.NewStudentsService;
 
 namespace TrainingCenterAPI.Controllers.NewStudent
@@ -34,23 +33,45 @@ namespace TrainingCenterAPI.Controllers.NewStudent
 
             return Ok(await _studentsService.AddNewStudent(dTO));
         }
+
+
         [HttpPut("PutNewStudent/{Id}")]
         public async Task<IActionResult> PutNewStudent(PutNewStudentDTO dTO, Guid Id)
         {
 
             return Ok(await _studentsService.PutNewStudent(dTO, Id));
         }
+
+        [HttpPut("PutWaitingStudent/{Id}")]
+        public async Task<IActionResult> PutWaitingStudent(PutNewStudentDTO dTO, Guid Id)
+        {
+
+            return Ok(await _studentsService.PutWaitingStudent(dTO, Id));
+        }
+
+
         [HttpPut("MoveNewStudentToWaitingStudent/{Id}")]
         public async Task<IActionResult> MoveNewStudentToWaitingStudent(Guid Id)
         {
 
             return Ok(await _studentsService.MoveNewStudentToWaitingStudent(Id));
         }
+
+
+
         [HttpDelete("{Id}")]
         public async Task<IActionResult> PutNewStudent(Guid Id)
         {
 
             return Ok(await _studentsService.DeleteNewStudent(Id));
+        }
+
+
+        [HttpDelete("DeleteWaitingStudent/{Id}")]
+        public async Task<IActionResult> DeleteWaitingStudent(Guid Id)
+        {
+
+            return Ok(await _studentsService.DeleteWaitingStudent(Id));
         }
     }
 }

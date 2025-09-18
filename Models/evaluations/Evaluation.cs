@@ -9,7 +9,7 @@ namespace TrainingCenterAPI.Models.evaluations
 
         public int Rating { get; set; } // 1 to 5 stars
         public string Opnion { get; set; }
-
+        public bool IsVisible { get; set; } = true;
         public evaluationOwnerType evaluationOwnerType { get; set; }
 
     }

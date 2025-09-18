@@ -1,8 +1,9 @@
-﻿using static TrainingCenterAPI.Enums.Enums;
+﻿using TrainingCenterAPI.DTOs.BaseDTO;
+using static TrainingCenterAPI.Enums.Enums;
 
 namespace TrainingCenterAPI.DTOs.Evaluation
 {
-    public class GetAllEvaluationDTO
+    public class GetAllEvaluationDTO : BaseDTOQuery
     {
         public Guid Id { get; set; }
 
@@ -12,6 +13,6 @@ namespace TrainingCenterAPI.DTOs.Evaluation
         public string Opnion { get; set; }
 
         public evaluationOwnerType evaluationOwnerType { get; set; }
-        public DateTime CreatedAt { get; set; }
+
     }
 }
