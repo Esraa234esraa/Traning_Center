@@ -1,4 +1,6 @@
-﻿using TrainingCenterAPI.DTOs.Evaluation;
+﻿using System.Linq.Expressions;
+using TrainingCenterAPI.DTOs.Evaluation;
+using TrainingCenterAPI.Helpers;
 using TrainingCenterAPI.Models.evaluations;
 
 namespace TrainingCenterAPI.Services.EvaluationsService
@@ -7,11 +9,13 @@ namespace TrainingCenterAPI.Services.EvaluationsService
     {
 
         private readonly ApplicationDbContext _context;
+        public ResponseDTO _ResponseDTO;
 
 
         public EvaluationService(ApplicationDbContext context)
         {
             _context = context;
+            _ResponseDTO = new ResponseDTO();
         }
 
 
@@ -54,10 +58,27 @@ namespace TrainingCenterAPI.Services.EvaluationsService
             return ResponseModel<string>.SuccessResponse(" تم نقل التقييم الى سلة المهملات");
         }
 
-        public async Task<ResponseModel<List<GetAllEvaluationDTO>>> GetAllEvaluation()
+        public async Task<ResponseModel<ResponseDTO>> GetAllEvaluation(GetAllEvaluationQuery request)
         {
+            //filter
+
+
+            var filterConditions = new Dictionary<Expression<Func<Evaluation, bool>>, bool>();
+
+            if (!string.IsNullOrEmpty(request.SearchWord))
+            {
+                filterConditions.Add(x => x.evaluationOwner == request.SearchWord ||
+                                          x.evaluationOwner.Contains(request.SearchWord)
+                                          , true);
+            }
+
+
+
             var evaluations = await _context.evaluations.Where(x => x.IsDeleted == false)
-              .AsNoTracking().Select(item => new GetAllEvaluationDTO
+
+              .AsNoTracking().OrderByDescending(x => x.CreatedAt)
+            .ApplyFilters(filterConditions, request.PageNumber, request.PageSize, ref _ResponseDTO).
+              Select(item => new GetAllEvaluationDTO
               {
 
                   Id = item.Id,
@@ -72,10 +93,12 @@ namespace TrainingCenterAPI.Services.EvaluationsService
             if (evaluations == null || evaluations.Count() <= 0)
             {
 
-                return ResponseModel<List<GetAllEvaluationDTO>>.FailResponse(" لاتوجد تقيمات");
+                return ResponseModel<ResponseDTO>.FailResponse(" لاتوجد تقيمات");
             }
 
-            return ResponseModel<List<GetAllEvaluationDTO>>.SuccessResponse(evaluations, "تم رجوع التقيمات بنجاح");
+            _ResponseDTO.Result = evaluations;
+
+            return ResponseModel<ResponseDTO>.SuccessResponse(_ResponseDTO, "تم رجوع التقيمات بنجاح");
 
         }
         public async Task<ResponseModel<List<GetAllEvaluationDTO>>> GetOnlyVisibleEvaluationsAsync()

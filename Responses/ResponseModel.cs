@@ -7,6 +7,8 @@
         public T? Data { get; set; }
         public List<string>? Errors { get; set; }
 
+
+
         public static ResponseModel<T> SuccessResponse(T data, string message = "")
         {
             return new ResponseModel<T>

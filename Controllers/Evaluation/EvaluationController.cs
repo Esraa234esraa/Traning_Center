@@ -15,10 +15,10 @@ namespace TrainingCenterAPI.Controllers.Evaluation
             _evaluationService = evaluationService;
         }
         [HttpGet("GetAllEvaluation")]
-        public async Task<IActionResult> GetAllEvaluation()
+        public async Task<IActionResult> GetAllEvaluation([FromQuery] GetAllEvaluationQuery request)
 
         {
-            return Ok(await _evaluationService.GetAllEvaluation());
+            return Ok(await _evaluationService.GetAllEvaluation(request));
         }
         [HttpGet("GetOnlyVisibleEvaluations")]
         public async Task<IActionResult> GetOnlyVisibleEvaluations()

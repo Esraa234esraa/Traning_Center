@@ -1,57 +1,55 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//[ApiController]
+//[Route("api/[controller]")]
+//public class BookingController : ControllerBase
+//{
+//    private readonly IBookingService _bookingService;
 
-[ApiController]
-[Route("api/[controller]")]
-public class BookingController : ControllerBase
-{
-    private readonly IBookingService _bookingService;
+//    public BookingController(IBookingService bookingService)
+//    {
+//        _bookingService = bookingService;
+//    }
 
-    public BookingController(IBookingService bookingService)
-    {
-        _bookingService = bookingService;
-    }
+//    [HttpPost]
+//    public async Task<IActionResult> CreateBooking([FromBody] BookingCreateDto dto)
+//    {
+//        var result = await _bookingService.CreateBookingAsync(dto);
 
-    [HttpPost]
-    public async Task<IActionResult> CreateBooking([FromBody] BookingCreateDto dto)
-    {
-        var result = await _bookingService.CreateBookingAsync(dto);
+//        if (!result.Success)
+//            return BadRequest(result.Message);
 
-        if (!result.Success)
-            return BadRequest(result.Message);
+//        return Ok(result);
+//    }
 
-        return Ok(result);
-    }
+//    [HttpGet("pending")]
+//    public async Task<IActionResult> GetPendingBookings()
+//    {
+//        var result = await _bookingService.GetPendingBookingsAsync();
 
-    [HttpGet("pending")]
-    public async Task<IActionResult> GetPendingBookings()
-    {
-        var result = await _bookingService.GetPendingBookingsAsync();
+//        if (!result.Success)
+//            return BadRequest(result.Message);
 
-        if (!result.Success)
-            return BadRequest(result.Message);
+//        return Ok(result);
+//    }
 
-        return Ok(result);
-    }
+//    [HttpGet("expired")]
+//    public async Task<IActionResult> GetExpiredBookings()
+//    {
+//        var result = await _bookingService.GetExpiredBookingsAsync();
 
-    [HttpGet("expired")]
-    public async Task<IActionResult> GetExpiredBookings()
-    {
-        var result = await _bookingService.GetExpiredBookingsAsync();
+//        if (!result.Success)
+//            return BadRequest(result.Message);
 
-        if (!result.Success)
-            return BadRequest(result.Message);
+//        return Ok(result);
+//    }
 
-        return Ok(result);
-    }
+//    [HttpPut("move-expired")]
+//    public async Task<IActionResult> MoveExpiredBookings()
+//    {
+//        var result = await _bookingService.MoveExpiredBookingsToExpiredStatusAsync();
 
-    [HttpPut("move-expired")]
-    public async Task<IActionResult> MoveExpiredBookings()
-    {
-        var result = await _bookingService.MoveExpiredBookingsToExpiredStatusAsync();
+//        if (!result.Success)
+//            return BadRequest(result.Message);
 
-        if (!result.Success)
-            return BadRequest(result.Message);
-
-        return Ok(result);
-    }
-}
+//        return Ok(result);
+//    }
+//}

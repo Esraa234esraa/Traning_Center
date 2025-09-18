@@ -3,6 +3,7 @@ global using Microsoft.AspNetCore.Identity;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.IdentityModel.Tokens;
+global using Microsoft.OpenApi.Models;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;
@@ -18,5 +19,9 @@ global using TrainingCenterAPI.Responses;
 global using TrainingCenterAPI.Services;
 global using TrainingCenterAPI.Services.Auth;
 global using TrainingCenterAPI.Services.Booking;
+global using TrainingCenterAPI.Services.BouquetsService;
+global using TrainingCenterAPI.Services.CoursesServices;
+global using TrainingCenterAPI.Services.EvaluationsService;
 global using TrainingCenterAPI.Services.Interfaces;
+global using TrainingCenterAPI.Services.NewStudentsService;
 
