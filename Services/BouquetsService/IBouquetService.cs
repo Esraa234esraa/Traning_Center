@@ -1,4 +1,5 @@
 ﻿using TrainingCenterAPI.DTOs.Bouquets;
+using TrainingCenterAPI.Models.Bouquets;
 
 namespace TrainingCenterAPI.Services.BouquetsService
 {
@@ -9,5 +10,6 @@ namespace TrainingCenterAPI.Services.BouquetsService
         Task<ResponseModel<Guid>> AddBouquet(AddBouquetDTO dTO);
         Task<ResponseModel<Guid>> UpdateBouquet(Guid Id, UpdateBouquetDTO dTO);
         Task<ResponseModel<bool>> DeleteBouquet(Guid Id);
+        Task<ResponseModel<Bouquet>> GetBouquetByIdAsync(Guid id);
     }
 }

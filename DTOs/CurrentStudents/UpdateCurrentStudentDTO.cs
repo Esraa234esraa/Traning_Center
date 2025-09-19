@@ -1,8 +1,8 @@
 ﻿namespace TrainingCenterAPI.DTOs.CurrentStudents
 {
-    public class AddCurrentStudentDTO
+    public class UpdateCurrentStudentDTO
     {
-        public Guid? Id { get; set; }
+
         public required string StudentName { get; set; }
 
         public string Email { get; set; } = string.Empty;

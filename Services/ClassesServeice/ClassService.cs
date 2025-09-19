@@ -10,7 +10,63 @@ namespace TrainingCenterAPI.Services.ClassesServeice
         {
             _context = context;
         }
+        public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesOfBouquet(Guid BouquetId)
+        {
+            var Levels = await _context.Classes.Include(x => x.Bouquet).AsNoTracking()
+                .Where(x => x.BouquetId == BouquetId && x.IsDeleted == false
+                && x.EndDate > DateTime.UtcNow && (x.Status != ClassStatus.Cancelled || x.Status != ClassStatus.Completed))
 
+                .Select(x => new GetAllClassesOfBouquetDTO
+                {
+                    Id = x.Id,
+                    BouquetName = x.Bouquet.BouquetName,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    ClassTime = x.ClassTime,
+                    BouquetId = x.BouquetId,
+                    CurrentStudentsCount = x.CurrentStudentsCount
+
+                }).ToListAsync();
+
+            if (Levels.Count() <= 0)
+                return ResponseModel<List<GetAllClassesOfBouquetDTO>>.FailResponse("لا توجد حصص اضيفت لهذا الباقة ");
+
+            return ResponseModel<List<GetAllClassesOfBouquetDTO>>.SuccessResponse(Levels, "Classes retrieved successfully");
+        }
+        public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClasses()
+        {
+            var Levels = await _context.Classes.Include(x => x.Bouquet).AsNoTracking()
+                .Where(x => x.IsDeleted == false
+)
+
+                .Select(x => new GetAllClassesOfBouquetDTO
+                {
+                    Id = x.Id,
+                    BouquetName = x.Bouquet.BouquetName,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    ClassTime = x.ClassTime,
+                    BouquetId = x.BouquetId,
+                    CurrentStudentsCount = x.CurrentStudentsCount,
+                    Status = x.Status
+
+                }).ToListAsync();
+
+            if (Levels.Count() <= 0)
+                return ResponseModel<List<GetAllClassesOfBouquetDTO>>.FailResponse("لا توجد حصص اضيفتة ");
+
+            return ResponseModel<List<GetAllClassesOfBouquetDTO>>.SuccessResponse(Levels, "Classes retrieved successfully");
+        }
+
+        public async Task<ResponseModel<Classes>> GetClassByIdAsync(Guid id)
+        {
+            var Class = await _context.Classes.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
+            if (Class == null)
+                return ResponseModel<Classes>.FailResponse("الدراسة ليست موجودة");
+
+
+            return ResponseModel<Classes>.SuccessResponse(Class, "Courses retrieved successfully");
+        }
         public async Task<ResponseModel<Guid>> AddClassAsync(AddClassDTO dTO)
         {
             try
@@ -44,6 +100,61 @@ namespace TrainingCenterAPI.Services.ClassesServeice
             }
 
         }
+        public async Task<ResponseModel<Guid>> UpdateClassAsync(Guid Id, UpdateClassDTO dTO)
+        {
+            try
+            {
+                var oldClass = await _context.Classes.FirstOrDefaultAsync(c => c.Id == Id && c.IsDeleted == false);
+                if (oldClass == null)
+                {
+                    return ResponseModel<Guid>.FailResponse($"هذا الحصة غير موجود ");
+                }
+
+
+
+
+                oldClass.StartDate = dTO.StartDate;
+                oldClass.EndDate = dTO.EndDate;
+                oldClass.ClassTime = dTO.ClassTime;
+                oldClass.BouquetId = dTO.BouquetId;
+                _context.Classes.Update(oldClass);
+                await _context.SaveChangesAsync();
+
+                return ResponseModel<Guid>.SuccessResponse(oldClass.Id, "تمت التعديل بنجاح");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel<Guid>.FailResponse($"{ex.Message}فشلت  التعديل   ");
+            }
+        }
+
+        public async Task<ResponseModel<bool>> DeleteClass(Guid Id)
+        {
+            try
+            {
+                var Class = await _context.Classes.FirstOrDefaultAsync(x => x.Id == Id && x.IsDeleted == false);
+                if (Class == null)
+                    return ResponseModel<bool>.FailResponse("المستوى ليس موجودة");
+
+                // 👇 Soft delete
+                Class.DeletedAt = DateTime.UtcNow;
+                Class.IsDeleted = true;
+                _context.Classes.Update(Class);
+                await _context.SaveChangesAsync();
+                return ResponseModel<bool>.SuccessResponse(true, "نم نقل المستوى الى سلة المهملات");
+            }
+            catch (Exception ex)
+            {
+
+                return ResponseModel<bool>.FailResponse($"{ex.Message}  فشلت عملية الحذف ");
+
+            }
+        }
+
+
+        //olddddddddddddddddddddddddddddddddddddddddd
+
+
 
         public Task<ResponseModel<StudentDto>> AddStudentToClassAsync(Guid classId, Guid studentId, bool isPaid)
         {
@@ -55,29 +166,6 @@ namespace TrainingCenterAPI.Services.ClassesServeice
             throw new NotImplementedException();
         }
 
-        public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesOfBouquet(Guid BouquetId)
-        {
-            var Levels = await _context.Classes.Include(x => x.Bouquet).AsNoTracking()
-                .Where(x => x.BouquetId == BouquetId && x.IsDeleted == false
-                && x.EndDate > DateTime.UtcNow && (x.Status != ClassStatus.Cancelled || x.Status != ClassStatus.Completed))
-
-                .Select(x => new GetAllClassesOfBouquetDTO
-                {
-                    Id = x.Id,
-                    BouquetName = x.Bouquet.BouquetName,
-                    StartDate = x.StartDate,
-                    EndDate = x.EndDate,
-                    ClassTime = x.ClassTime,
-                    BouquetId = x.BouquetId,
-                    CurrentStudentsCount = x.CurrentStudentsCount
-
-                }).ToListAsync();
-
-            if (Levels.Count() <= 0)
-                return ResponseModel<List<GetAllClassesOfBouquetDTO>>.FailResponse("لا توجد حصص اضيفت لهذا الباقة ");
-
-            return ResponseModel<List<GetAllClassesOfBouquetDTO>>.SuccessResponse(Levels, "Classes retrieved successfully");
-        }
 
         public Task<ResponseModel<ClassWithStudentsDto>> GetClassWithStudentsAsync(Guid classId)
         {
@@ -89,13 +177,11 @@ namespace TrainingCenterAPI.Services.ClassesServeice
             throw new NotImplementedException();
         }
 
+
         public Task<ResponseModel<StudentDto>> UpdateStudentInClassAsync(Guid classId, Guid studentId, bool isPaid)
         {
             throw new NotImplementedException();
         }
-
-
-
 
 
     }

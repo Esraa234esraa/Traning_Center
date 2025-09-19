@@ -22,19 +22,47 @@ namespace TrainingCenterAPI.Controllers
         //    return Ok(result);
         //}
 
-        // ✅ 1. جلب حصة + طلابها
+
         [HttpGet("AllClassesOfBouquet")]
         public async Task<IActionResult> AllClassesOfBouquet(Guid BouquetId)
         {
             var result = await _classService.GetAllClassesOfBouquet(BouquetId);
             return Ok(result);
         }
+        [HttpGet("GetAllClasses")]
+        public async Task<IActionResult> GetAllClasses()
+        {
+            var result = await _classService.GetAllClasses();
+            return Ok(result);
+        }
+        [HttpGet("GetClassById/{Id}")]
+        public async Task<IActionResult> GetClassById(Guid Id)
+        {
+            var result = await _classService.GetClassByIdAsync(Id);
+
+
+            return Ok(result);
+        }
+
 
         // ✅ 2. إضافة  للحصة
         [HttpPost("AddClass")]
         public async Task<IActionResult> AddClass(AddClassDTO dTO)
         {
             var result = await _classService.AddClassAsync(dTO);
+            return Ok(result);
+        }
+        [HttpPut("UpdateClass/{Id}")]
+        public async Task<IActionResult> UpdateClass(Guid Id, UpdateClassDTO dTO)
+        {
+            var result = await _classService.UpdateClassAsync(Id, dTO);
+            return Ok(result);
+        }
+
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteClass(Guid Id)
+        {
+            var result = await _classService.DeleteClass(Id);
             return Ok(result);
         }
 

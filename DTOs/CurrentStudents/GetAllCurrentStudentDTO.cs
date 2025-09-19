@@ -1,6 +1,6 @@
 ﻿namespace TrainingCenterAPI.DTOs.CurrentStudents
 {
-    public class AddCurrentStudentDTO
+    public class GetAllCurrentStudentDTO
     {
         public Guid? Id { get; set; }
         public required string StudentName { get; set; }
@@ -11,6 +11,8 @@
         public required string PhoneNumber { get; set; }
 
         public bool IsPaid { get; set; } = false;
-        public Guid ClassId { get; set; }
+        public string? BouquetName { get; set; }
+        public string? CourseName { get; set; }
+        public int BouquetNumber { get; set; }
     }
 }
