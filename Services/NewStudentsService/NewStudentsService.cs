@@ -106,6 +106,16 @@ namespace TrainingCenterAPI.Services.NewStudentsService
             return ResponseModel<List<GetAllNewStudentDTO>>.SuccessResponse(newStudents, "تم رجوع الطلاب الجدد بنجاح");
 
         }
+        public async Task<ResponseModel<NewStudent>> GetWaitingNewStudentById(Guid id)
+        {
+            var waitingStudent = await _context.newStudents.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false && x.status == NewStudentStatus.waiting);
+            if (waitingStudent == null)
+                return ResponseModel<NewStudent>.FailResponse(" ليست موجودة");
+
+
+            return ResponseModel<NewStudent>.SuccessResponse(waitingStudent, "Courses retrieved successfully");
+        }
+
 
         public async Task<ResponseModel<List<GetAllNewStudentDTO>>> GetAllWaitingNewStudent()
         {
