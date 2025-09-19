@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TrainingCenterAPI.DTOs.Levels;
-using TrainingCenterAPI.Services;
-
+﻿
 namespace TrainingCenterAPI.Controllers.Level
 {
     [Route("api/[controller]")]

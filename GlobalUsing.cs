@@ -1,7 +1,9 @@
 ﻿global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.IdentityModel.Tokens;
+global using Microsoft.OpenApi.Models;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;
@@ -10,11 +12,16 @@ global using TrainingCenterAPI.DTOs;
 global using TrainingCenterAPI.DTOs.Admin;
 global using TrainingCenterAPI.DTOs.Auth;
 global using TrainingCenterAPI.DTOs.Booking;
+global using TrainingCenterAPI.DTOs.Levels;
 global using TrainingCenterAPI.DTOs.Teacher;
 global using TrainingCenterAPI.Models;
 global using TrainingCenterAPI.Responses;
+global using TrainingCenterAPI.Services;
 global using TrainingCenterAPI.Services.Auth;
 global using TrainingCenterAPI.Services.Booking;
-global using TrainingCenterAPI.Services.Implementations;
+global using TrainingCenterAPI.Services.BouquetsService;
+global using TrainingCenterAPI.Services.CoursesServices;
+global using TrainingCenterAPI.Services.EvaluationsService;
 global using TrainingCenterAPI.Services.Interfaces;
-global using TrainingCenterAPI.Services.Teacher;
+global using TrainingCenterAPI.Services.NewStudentsService;
+

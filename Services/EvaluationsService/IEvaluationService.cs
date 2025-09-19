@@ -6,9 +6,11 @@ namespace TrainingCenterAPI.Services.EvaluationsService
     {
         Task<ResponseModel<Guid>> AddEvaluation(PostEvaluationDTO DTO);
 
-        Task<ResponseModel<List<GetAllEvaluationDTO>>> GetAllEvaluation();
+        Task<ResponseModel<ResponseDTO>> GetAllEvaluation(GetAllEvaluationQuery request);
 
-
+        Task<ResponseModel<bool>> HideEvaluationAsync(Guid id);
+        Task<ResponseModel<bool>> VisibleEvaluationAsync(Guid id);
+        Task<ResponseModel<List<GetAllEvaluationDTO>>> GetOnlyVisibleEvaluationsAsync();
         Task<ResponseModel<string>> DeleteEvaluation(Guid Id);
     }
 }

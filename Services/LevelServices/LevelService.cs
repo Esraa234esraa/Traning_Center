@@ -1,6 +1,4 @@
-﻿using TrainingCenterAPI.DTOs.Levels;
-
-namespace TrainingCenterAPI.Services
+﻿namespace TrainingCenterAPI.Services
 {
     public class LevelService : ILevelService
     {
@@ -87,7 +85,7 @@ namespace TrainingCenterAPI.Services
 
             try
             {
-                var oldLevel = await _context.levels.FirstOrDefaultAsync(c => c.Id == Id);
+                var oldLevel = await _context.levels.FirstOrDefaultAsync(c => c.Id == Id && c.IsDeleted == false);
                 if (oldLevel == null)
                 {
                     return ResponseModel<Guid>.FailResponse($"هذا المستوى غير موجود ");

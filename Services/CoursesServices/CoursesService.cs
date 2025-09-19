@@ -80,6 +80,29 @@ namespace TrainingCenterAPI.Services.CoursesServices
 
             return ResponseModel<List<GetAllCoursesDto>>.SuccessResponse(courses, "Courses retrieved successfully");
         }
+        public async Task<ResponseModel<List<GetAllCoursesDto>>> GetOnlyVisibleCoursesAsync()
+        {
+            var courses = await _context.Course.Where(x => x.IsDeleted == false && x.IsVisible == true)
+                .OrderByDescending(x => x.CreatedAt)
+                .AsNoTracking()
+
+                .Select(c => new GetAllCoursesDto
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Description = c.Description,
+                    FilePath = c.FilePath,
+                    IsActive = c.IsActive,
+                    IsVisible = c.IsVisible,
+                    CreateAt = c.CreatedAt
+
+                })
+                .ToListAsync();
+            if (courses.Count() <= 0)
+                return ResponseModel<List<GetAllCoursesDto>>.FailResponse("لا توجد دراسة او دورات");
+
+            return ResponseModel<List<GetAllCoursesDto>>.SuccessResponse(courses, "Courses retrieved successfully");
+        }
         public async Task<ResponseModel<bool>> DeleteCourseAsync(Guid id)
         {
             try
@@ -114,7 +137,7 @@ namespace TrainingCenterAPI.Services.CoursesServices
                     return ResponseModel<bool>.FailResponse("الدراسة ليست موجودة او ليست ظاهره ");
 
                 // 👇 Soft delete
-                course.DeletedAt = DateTime.UtcNow;
+                course.UpdatedAt = DateTime.UtcNow;
                 course.IsVisible = false;
                 _context.Course.Update(course);
                 await _context.SaveChangesAsync();
@@ -138,7 +161,7 @@ namespace TrainingCenterAPI.Services.CoursesServices
                     return ResponseModel<bool>.FailResponse("الدراسة ليست موجودة او ليست مخفيه");
 
                 // 👇 Soft delete
-                course.DeletedAt = DateTime.UtcNow;
+                course.UpdatedAt = DateTime.UtcNow;
                 course.IsVisible = true;
                 _context.Course.Update(course);
                 await _context.SaveChangesAsync();

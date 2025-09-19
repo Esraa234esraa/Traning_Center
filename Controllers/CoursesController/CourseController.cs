@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TrainingCenterAPI.DTOs.Courses;
+﻿using TrainingCenterAPI.DTOs.Courses;
 using TrainingCenterAPI.Services.CoursesServices;
 
 namespace TrainingCenterAPI.Controllers.CoursesController
@@ -27,6 +26,14 @@ namespace TrainingCenterAPI.Controllers.CoursesController
         public async Task<IActionResult> GetAllCourses()
         {
             var result = await _courseService.GetAllCoursesAsync();
+
+
+            return Ok(result);
+        }
+        [HttpGet("GetOnlyVisibleCourses")]
+        public async Task<IActionResult> GetOnlyVisibleCourses()
+        {
+            var result = await _courseService.GetOnlyVisibleCoursesAsync();
 
 
             return Ok(result);

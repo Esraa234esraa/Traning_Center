@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using TrainingCenterAPI.Models.BaseEntitys;
 using TrainingCenterAPI.Models.Bouquets;
 using TrainingCenterAPI.Models.Courses;
 using TrainingCenterAPI.Models.evaluations;
@@ -12,6 +13,12 @@ namespace TrainingCenterAPI.Data
         : base(options)
         {
         }
+
+
+
+
+
+
 
         // جداول
         public DbSet<TeacherDetails> TeacherDetails { get; set; }
@@ -47,11 +54,6 @@ namespace TrainingCenterAPI.Data
 
 
 
-            modelBuilder.Entity<NewStudent>()
-                .HasIndex(s => new { s.Date, s.Time })
-                .IsUnique(); // ensures uniqueness at DB level
-
-
 
             // -------------------
             // علاقات Classes -> Level
@@ -61,42 +63,7 @@ namespace TrainingCenterAPI.Data
                     .HasForeignKey(c => c.LevelId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-            // علاقات StudentClass -> Level
-            //modelBuilder.Entity<StudentClass>()
-            //    .HasOne(sc => sc.Level)
-            //    .WithMany()
-            //    .HasForeignKey(sc => sc.LevelId)
-            //    .OnDelete(DeleteBehavior.Restrict);
 
-            // علاقات ApplicationUser -> Level
-            //modelBuilder.Entity<ApplicationUser>()
-            //    .HasOne(u => u.Level)
-            //    .WithMany()
-            //    .HasForeignKey(u => u.LevelId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-
-            // -------------------
-            // StudentClass -> Class
-            //modelBuilder.Entity<StudentClass>()
-            //    .HasOne(sc => sc.Class)
-            //    .WithMany(c => c.StudentClasses)
-            //    .HasForeignKey(sc => sc.ClassId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-            // StudentClass -> Student
-            //modelBuilder.Entity<StudentClass>()
-            //    .HasOne(sc => sc.Student)
-            //    .WithMany()
-            //    .HasForeignKey(sc => sc.StudentId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-            // WaitingList -> Class
-            //modelBuilder.Entity<WaitingList>()
-            //    .HasOne(w => w.Class)
-            //    .WithMany(c => c.WaitingList)
-            //    .HasForeignKey(w => w.ClassId)
-            //    .OnDelete(DeleteBehavior.Restrict);
 
 
 
@@ -107,8 +74,25 @@ namespace TrainingCenterAPI.Data
             //   modelBuilder.Entity<StudentClass>().HasQueryFilter(sc => sc.DeletedAt == null);
 
         }
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+                }
+            }
 
-
-
+            return await base.SaveChangesAsync(cancellationToken);
+        }
     }
+
+
+
 }
+
