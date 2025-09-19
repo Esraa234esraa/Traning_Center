@@ -1,20 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using TrainingCenterAPI.Models.BaseEntitys;
 using TrainingCenterAPI.Models.Courses;
 
 namespace TrainingCenterAPI.Models
 {
-    public class TeacherDetails
+    public class TeacherDetails : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
+
 
         // FK إلى ApplicationUser
 
         public string Gender { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
         public string CourseName { get; set; } = string.Empty;
-        public DateTime? DeletedAt { get; set; }  // 👈 Soft Delete
+
 
         [ForeignKey("UserId")]
         public Guid UserId { get; set; }

@@ -22,6 +22,6 @@ global using TrainingCenterAPI.Services.Booking;
 global using TrainingCenterAPI.Services.BouquetsService;
 global using TrainingCenterAPI.Services.CoursesServices;
 global using TrainingCenterAPI.Services.EvaluationsService;
-global using TrainingCenterAPI.Services.Interfaces;
+
 global using TrainingCenterAPI.Services.NewStudentsService;
 

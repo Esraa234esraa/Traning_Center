@@ -16,10 +16,6 @@ namespace TrainingCenterAPI.Data
 
 
 
-
-
-
-
         // جداول
         public DbSet<TeacherDetails> TeacherDetails { get; set; }
         public DbSet<OtpVerification> OtpVerifications { get; set; }
@@ -49,27 +45,7 @@ namespace TrainingCenterAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // -------------------
 
-
-
-
-
-            // -------------------
-            // علاقات Classes -> Level
-            modelBuilder.Entity<Classes>()
-                    .HasOne(c => c.Level)
-                    .WithMany()
-                    .HasForeignKey(c => c.LevelId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-
-
-
-
-
-            // -------------------
-            // Soft Delete filters
             modelBuilder.Entity<Classes>().HasQueryFilter(c => c.DeletedAt == null);
             //   modelBuilder.Entity<StudentClass>().HasQueryFilter(sc => sc.DeletedAt == null);
 
