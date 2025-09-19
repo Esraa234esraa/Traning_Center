@@ -148,6 +148,16 @@ namespace TrainingCenterAPI.Services.BouquetsService
                 return ResponseModel<Guid>.FailResponse($"{ex.Message}فشلت  التعديل   ");
             }
         }
+        public async Task<ResponseModel<Bouquet>> GetBouquetByIdAsync(Guid id)
+        {
+            var bouquet = await _context.bouquets.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
+            if (bouquet == null)
+                return ResponseModel<Bouquet>.FailResponse(" ليست موجودة");
+
+
+            return ResponseModel<Bouquet>.SuccessResponse(bouquet, "Courses retrieved successfully");
+        }
+
     }
 }
 

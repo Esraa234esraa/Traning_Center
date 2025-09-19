@@ -8,7 +8,12 @@ namespace TrainingCenterAPI.Services.ClassesServeice
 
         Task<ResponseModel<StudentDto>> AddStudentToClassAsync(Guid classId, Guid studentId, bool isPaid);
         Task<ResponseModel<Guid>> AddClassAsync(AddClassDTO DTO);  //new
-        Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesOfBouquet(Guid BouquetId); //new
+        Task<ResponseModel<Classes>> GetClassByIdAsync(Guid id);
+        Task<ResponseModel<Guid>> UpdateClassAsync(Guid Id, UpdateClassDTO DTO);
+        Task<ResponseModel<bool>> DeleteClass(Guid Id);
+
+        Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesOfBouquet(Guid BouquetId);
+        Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClasses();
         Task<ResponseModel<StudentDto>> UpdateStudentInClassAsync(Guid classId, Guid studentId, bool isPaid);
         Task<ResponseModel<bool>> RemoveStudentFromClassAsync(Guid classId, Guid studentId);
         Task<ResponseModel<List<AllClassesForTeacherDto>>> GetAllClassesByTeacherId(Guid teacherId);

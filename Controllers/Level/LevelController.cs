@@ -1,5 +1,4 @@
-﻿
-namespace TrainingCenterAPI.Controllers.Level
+﻿namespace TrainingCenterAPI.Controllers.Level
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -28,7 +27,22 @@ namespace TrainingCenterAPI.Controllers.Level
 
             return Ok(result);
         }
+        [HttpGet("GetAllLevels")]
+        public async Task<IActionResult> GetAllLevels()
+        {
+            var result = await _levelService.GetAllLevels();
 
+
+            return Ok(result);
+        }
+        [HttpGet("GetLevelById/{Id}")]
+        public async Task<IActionResult> GetLevelById(Guid Id)
+        {
+            var result = await _levelService.GetLevelByIdAsync(Id);
+
+
+            return Ok(result);
+        }
 
         [HttpPut("UpdateLevel/{Id}")]
         public async Task<IActionResult> UpdateLevel(Guid Id, [FromForm] UpdateLevelDTO dto)

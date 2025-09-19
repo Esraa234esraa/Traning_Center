@@ -79,6 +79,25 @@
 
             return ResponseModel<List<GetAllLevelsDTO>>.SuccessResponse(Levels, "Levels retrieved successfully");
         }
+        public async Task<ResponseModel<List<GetAllLevelsDTO>>> GetAllLevels()
+        {
+            var Levels = await _context.levels.Include(x => x.Course).AsNoTracking()
+                .Where(x => x.IsDeleted == false)
+
+                .Select(x => new GetAllLevelsDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    LevelNumber = x.LevelNumber,
+                    CourseName = x.Course.Name,
+
+                }).ToListAsync();
+
+            if (Levels.Count() <= 0)
+                return ResponseModel<List<GetAllLevelsDTO>>.FailResponse("لا توجد مستويات اضيفت   ");
+
+            return ResponseModel<List<GetAllLevelsDTO>>.SuccessResponse(Levels, "Levels retrieved successfully");
+        }
 
         public async Task<ResponseModel<Guid>> UpdateLevel(Guid Id, UpdateLevelDTO dTO)
         {
@@ -90,9 +109,6 @@
                 {
                     return ResponseModel<Guid>.FailResponse($"هذا المستوى غير موجود ");
                 }
-
-
-
 
 
 
@@ -109,6 +125,15 @@
             {
                 return ResponseModel<Guid>.FailResponse($"{ex.Message}فشلت  التعديل   ");
             }
+        }
+        public async Task<ResponseModel<Level>> GetLevelByIdAsync(Guid id)
+        {
+            var level = await _context.levels.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
+            if (level == null)
+                return ResponseModel<Level>.FailResponse(" ليست موجودة");
+
+
+            return ResponseModel<Level>.SuccessResponse(level, "Courses retrieved successfully");
         }
     }
 }

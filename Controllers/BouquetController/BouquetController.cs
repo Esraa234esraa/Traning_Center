@@ -1,6 +1,6 @@
 ﻿using TrainingCenterAPI.DTOs.Bouquets;
 
-namespace TrainingCenterAPI.Controllers
+namespace TrainingCenterAPI.Controllers.BouquetController
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -22,6 +22,15 @@ namespace TrainingCenterAPI.Controllers
 
             return Ok(result);
         }
+        [HttpGet("GetBouquetById/{Id}")]
+        public async Task<IActionResult> GetBouquetById(Guid Id)
+        {
+            var result = await _bouquetService.GetBouquetByIdAsync(Id);
+
+
+            return Ok(result);
+        }
+
 
         [HttpGet("GetAllBouquets")]
         public async Task<IActionResult> GetAllBouquets()

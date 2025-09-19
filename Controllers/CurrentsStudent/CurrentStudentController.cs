@@ -16,10 +16,34 @@ namespace TrainingCenterAPI.Controllers.CurrentsStudent
         {
             _currentStudentService = currentStudentService;
         }
-        [HttpPost("AddLevel")]
-        public async Task<IActionResult> AddLevel([FromForm] AddCurrentStudentDTO dto)
+        [HttpPost("AddCurrentStudent")]
+        public async Task<IActionResult> AddCurrentStudent([FromForm] AddCurrentStudentDTO dto)
         {
             var result = await _currentStudentService.AddCurrentStudent(dto);
+
+
+            return Ok(result);
+        }
+        [HttpGet("GetAllCurrentStudent")]
+        public async Task<IActionResult> GetAllCurrentStudent()
+        {
+            var result = await _currentStudentService.GetAllCurrentStudent();
+
+
+            return Ok(result);
+        }
+        [HttpPut("UpdateCurrentStudent/{Id}")]
+        public async Task<IActionResult> UpdateCurrentStudent(Guid Id, [FromForm] UpdateCurrentStudentDTO dto)
+        {
+            var result = await _currentStudentService.UpdateCurrentStudent(Id, dto);
+
+
+            return Ok(result);
+        }
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteCurrentStudent(Guid Id)
+        {
+            var result = await _currentStudentService.DeleteCurrentStudent(Id);
 
 
             return Ok(result);
