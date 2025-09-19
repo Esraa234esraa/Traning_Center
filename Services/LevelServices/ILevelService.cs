@@ -1,6 +1,4 @@
-﻿using TrainingCenterAPI.DTOs.Levels;
-
-namespace TrainingCenterAPI.Services
+﻿namespace TrainingCenterAPI.Services
 {
     public interface ILevelService
     {

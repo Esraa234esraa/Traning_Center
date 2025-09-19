@@ -26,9 +26,7 @@ namespace TrainingCenterAPI.Models.Students
         public CurrentStudent Student { get; set; }
 
 
-        public Guid LevelId { get; set; }
-        [ForeignKey("LevelId")]
-        public Level Level { get; set; }
+
         // ✅ حالة الدفع
         public bool IsPaid { get; set; } = false;
     }

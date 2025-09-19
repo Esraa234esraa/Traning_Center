@@ -3,9 +3,8 @@
     public class TeacherCreateRequest
     {
         // بيانات المعلم
-        public TeacherDto Teacher { get; set; } = new TeacherDto();
+        public AddTeacherDto Teacher { get; set; } = new AddTeacherDto();
 
-        // كلمة المرور
-        public string Password { get; set; } = string.Empty;
+
     }
 }

@@ -1,4 +1,7 @@
-﻿
+﻿using TrainingCenterAPI.Services.ClassesServeice;
+using TrainingCenterAPI.Services.CurretnStudentsService;
+using TrainingCenterAPI.Services.Implementations;
+using TrainingCenterAPI.Services.Teacher;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +64,9 @@ builder.Services.AddScoped<IEvaluationService, EvaluationService>();
 builder.Services.AddScoped<ICoursesServices, CoursesService>();
 builder.Services.AddScoped<ILevelService, LevelService>();
 builder.Services.AddScoped<IBouquetService, BouquetService>();
+builder.Services.AddScoped<IClassService, ClassService>();
+builder.Services.AddScoped<ICurrentStudentService, CurrentStudentService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
 
 
 //builder.Services.AddScoped<IOtpService, OtpService>();

@@ -3,11 +3,11 @@
     public interface ITeacherService
     {
         // CRUD
-        //Task<ResponseModel<List<TeacherWithClassesDto>>> GetAllTeachersAsync();
+        Task<ResponseModel<List<GetAllTeacherDto>>> GetAllTeachersAsync();
         //Task<ResponseModel<TeacherWithClassesDto>> GetTeacherByIdAsync(Guid teacherId);
-        //Task<ResponseModel<TeacherDto>> AddTeacherAsync(TeacherDto teacherDto, string password);
-        //Task<ResponseModel<TeacherDto>> UpdateTeacherAsync(Guid teacherId, TeacherDto teacherDto);
-        //Task<ResponseModel<bool>> DeleteTeacherAsync(Guid teacherId);
+        Task<ResponseModel<Guid>> AddTeacherAsync(AddTeacherDto teacherDto);
+        Task<ResponseModel<Guid>> UpdateTeacherAsync(Guid teacherId, UpdateTeacherDto teacherDto);
+        Task<ResponseModel<bool>> DeleteTeacherAsync(Guid teacherId);
         //Task<ResponseModel<TeacherLoginResponse>> LoginTeacherAsync(string email, string password);
 
         //// Relations

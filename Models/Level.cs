@@ -16,5 +16,5 @@ public class Level : BaseEntity
     public Guid CourseId { get; set; }
     [ForeignKey("CourseId")]
     public Course Course { get; set; }
-    public ICollection<Classes> Classes { get; set; }
+    //public ICollection<Classes> Classes { get; set; }
 }
