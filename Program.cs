@@ -72,15 +72,20 @@ builder.Services.AddScoped<ITeacherService, TeacherService>();
 //builder.Services.AddScoped<IOtpService, OtpService>();
 //builder.Services.AddTransient<IEmailService, DebugEmailService>(); // أو خدمة حقيقية
 
+
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
+    options.AddPolicy("AllowAllWithCredentials",
         builder => builder
-            .WithOrigins("http://localhost:5173") // اكتب هنا origin الخاص بالفرونت عندك
+            .SetIsOriginAllowed(_ => true) // يسمح لأي Origin
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
+
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -112,7 +117,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowAllWithCredentials");
 
 
 app.UseHttpsRedirection();

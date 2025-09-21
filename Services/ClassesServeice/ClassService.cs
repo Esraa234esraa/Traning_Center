@@ -10,11 +10,33 @@ namespace TrainingCenterAPI.Services.ClassesServeice
         {
             _context = context;
         }
-        public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesOfBouquet(Guid BouquetId)
+        public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetOnlyAvailableClassesOfBouquet(Guid BouquetId)
         {
             var Levels = await _context.Classes.Include(x => x.Bouquet).AsNoTracking()
                 .Where(x => x.BouquetId == BouquetId && x.IsDeleted == false
                 && x.EndDate > DateTime.UtcNow && (x.Status != ClassStatus.Cancelled || x.Status != ClassStatus.Completed))
+
+                .Select(x => new GetAllClassesOfBouquetDTO
+                {
+                    Id = x.Id,
+                    BouquetName = x.Bouquet.BouquetName,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    ClassTime = x.ClassTime,
+                    BouquetId = x.BouquetId,
+                    CurrentStudentsCount = x.CurrentStudentsCount
+
+                }).ToListAsync();
+
+            if (Levels.Count() <= 0)
+                return ResponseModel<List<GetAllClassesOfBouquetDTO>>.FailResponse("لا توجد حصص متاحه حاليا ");
+
+            return ResponseModel<List<GetAllClassesOfBouquetDTO>>.SuccessResponse(Levels, "Classes retrieved successfully");
+        }
+        public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesOfBouquet(Guid BouquetId)
+        {
+            var Levels = await _context.Classes.Include(x => x.Bouquet).AsNoTracking()
+                .Where(x => x.BouquetId == BouquetId && x.IsDeleted == false)
 
                 .Select(x => new GetAllClassesOfBouquetDTO
                 {
@@ -37,6 +59,30 @@ namespace TrainingCenterAPI.Services.ClassesServeice
         {
             var Levels = await _context.Classes.Include(x => x.Bouquet).AsNoTracking()
                 .Where(x => x.IsDeleted == false
+)
+
+                .Select(x => new GetAllClassesOfBouquetDTO
+                {
+                    Id = x.Id,
+                    BouquetName = x.Bouquet.BouquetName,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    ClassTime = x.ClassTime,
+                    BouquetId = x.BouquetId,
+                    CurrentStudentsCount = x.CurrentStudentsCount,
+                    Status = x.Status
+
+                }).ToListAsync();
+
+            if (Levels.Count() <= 0)
+                return ResponseModel<List<GetAllClassesOfBouquetDTO>>.FailResponse("لا توجد حصص اضيفتة ");
+
+            return ResponseModel<List<GetAllClassesOfBouquetDTO>>.SuccessResponse(Levels, "Classes retrieved successfully");
+        }
+        public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesEmptyFromTeacher()
+        {
+            var Levels = await _context.Classes.Include(x => x.Bouquet).Include(x => x.Teacher).AsNoTracking()
+                .Where(x => x.IsDeleted == false && x.Teacher == null
 )
 
                 .Select(x => new GetAllClassesOfBouquetDTO
@@ -154,7 +200,7 @@ namespace TrainingCenterAPI.Services.ClassesServeice
 
         //olddddddddddddddddddddddddddddddddddddddddd
 
-
+        #region old
 
         public Task<ResponseModel<StudentDto>> AddStudentToClassAsync(Guid classId, Guid studentId, bool isPaid)
         {
@@ -182,6 +228,7 @@ namespace TrainingCenterAPI.Services.ClassesServeice
         {
             throw new NotImplementedException();
         }
+        #endregion
 
 
     }

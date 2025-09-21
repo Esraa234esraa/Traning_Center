@@ -14,5 +14,15 @@
         public string? BouquetName { get; set; }
         public string? CourseName { get; set; }
         public int BouquetNumber { get; set; }
+        public List<ClassForStudentDTO> Classes { get; set; } = new();
+    }
+    public class ClassForStudentDTO
+    {
+        public Guid ClassId { get; set; }
+        public string BouquetName { get; set; }
+        public int BouquetNumber { get; set; }
+        public string CourseName { get; set; }
+        public int LevelNumber { get; set; }
+        public string LevelName { get; set; }
     }
 }

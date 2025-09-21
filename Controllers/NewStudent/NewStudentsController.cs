@@ -1,5 +1,4 @@
 ﻿using TrainingCenterAPI.DTOs.NewStudents;
-using TrainingCenterAPI.Services.NewStudentsService;
 
 namespace TrainingCenterAPI.Controllers.NewStudent
 {
@@ -17,6 +16,12 @@ namespace TrainingCenterAPI.Controllers.NewStudent
         {
 
             return Ok(await _studentsService.GetAllNewStudent());
+        }
+        [HttpGet("GetWaitingNewStudentById/{Id}")]
+        public async Task<IActionResult> GetWaitingNewStudentById(Guid Id)
+        {
+
+            return Ok(await _studentsService.GetWaitingNewStudentById(Id));
         }
 
         [HttpGet("GetAllWaitingNewStudent")]

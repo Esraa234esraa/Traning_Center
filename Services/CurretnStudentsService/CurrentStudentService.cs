@@ -36,7 +36,7 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
                 var student = new CurrentStudent
                 {
                     StudentName = dto.StudentName,
-
+                    Email = dto.Email,
                     Gender = dto.Gender,
                     City = dto.City,
                     PhoneNumber = dto.PhoneNumber,
@@ -63,28 +63,36 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
 
         public async Task<ResponseModel<List<GetAllCurrentStudentDTO>>> GetAllCurrentStudent()
         {
-            var Levels = await _context.currents.AsNoTracking()
-                .Include(x => x.GetCurrentStudentClasses).ThenInclude(x => x.Class)
-                .ThenInclude(x => x.Bouquet).ThenInclude(x => x.Level).ThenInclude(x => x.Course)
-                .Where(x => x.IsDeleted == false).
+            var Students = await _context.currents
+        .AsNoTracking()
+       .Where(x => !x.IsDeleted)
+       .Select(x => new GetAllCurrentStudentDTO
+       {
+           Id = x.Id,
+           StudentName = x.StudentName,
+           City = x.City,
+           PhoneNumber = x.PhoneNumber,
+           IsPaid = x.IsPaid,
 
-                Select(x => new GetAllCurrentStudentDTO
-                {
-                    Id = x.Id,
-                    StudentName = x.StudentName,
-                    City = x.City,
-                    PhoneNumber = x.PhoneNumber,
-                    BouquetName = x.GetCurrentStudentClasses.FirstOrDefault().Class.Bouquet.BouquetName,
-                    BouquetNumber = x.GetCurrentStudentClasses.FirstOrDefault().Class.Bouquet.StudentsPackageCount,
-                    CourseName = x.GetCurrentStudentClasses.FirstOrDefault().Class.Bouquet.Course.Name
+           // 👇 كل الكلاسات اللي الطالب فيها
+           Classes = x.GetCurrentStudentClasses
+               .Select(cs => new ClassForStudentDTO
+               {
+                   ClassId = cs.Class.Id,
+                   BouquetName = cs.Class.Bouquet.BouquetName,
+                   BouquetNumber = cs.Class.Bouquet.StudentsPackageCount,
+                   CourseName = cs.Class.Bouquet.Course.Name,
+                   LevelNumber = cs.Class.Bouquet.Level.LevelNumber,
+                   LevelName = cs.Class.Bouquet.Level.Name
+               }).ToList()
+       })
+       .ToListAsync();
 
 
-                }).ToListAsync();
-
-            if (Levels.Count() <= 0)
+            if (Students.Count() <= 0)
                 return ResponseModel<List<GetAllCurrentStudentDTO>>.FailResponse("لا توجد حصص اضيفتة ");
 
-            return ResponseModel<List<GetAllCurrentStudentDTO>>.SuccessResponse(Levels, "Classes retrieved successfully");
+            return ResponseModel<List<GetAllCurrentStudentDTO>>.SuccessResponse(Students, "Classes retrieved successfully");
         }
         public async Task<ResponseModel<Guid>> UpdateCurrentStudent(Guid Id, UpdateCurrentStudentDTO dTO)
         {
@@ -152,7 +160,7 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
                 // Soft delete للعلاقات
                 foreach (var sc in student.GetCurrentStudentClasses)
                 {
-                    sc.IsDeleted = true;
+                    _context.CurrentStudentClasses.Remove(sc);
                 }
                 _context.currents.Update(student);
                 await _context.SaveChangesAsync();

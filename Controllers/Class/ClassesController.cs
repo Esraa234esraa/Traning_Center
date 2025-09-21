@@ -21,12 +21,23 @@ namespace TrainingCenterAPI.Controllers
         //    var result = await _classService.GetClassWithStudentsAsync(classId);
         //    return Ok(result);
         //}
-
+        [HttpGet("GetOnlyAvailableClassesOfBouquet")]
+        public async Task<IActionResult> GetOnlyAvailableClassesOfBouquet(Guid BouquetId)
+        {
+            var result = await _classService.GetOnlyAvailableClassesOfBouquet(BouquetId);
+            return Ok(result);
+        }
 
         [HttpGet("AllClassesOfBouquet")]
         public async Task<IActionResult> AllClassesOfBouquet(Guid BouquetId)
         {
             var result = await _classService.GetAllClassesOfBouquet(BouquetId);
+            return Ok(result);
+        }
+        [HttpGet("GetAllClassesEmptyFromTeacher")]
+        public async Task<IActionResult> GetAllClassesEmptyFromTeacher()
+        {
+            var result = await _classService.GetAllClassesEmptyFromTeacher();
             return Ok(result);
         }
         [HttpGet("GetAllClasses")]
