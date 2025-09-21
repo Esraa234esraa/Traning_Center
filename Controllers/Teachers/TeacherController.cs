@@ -3,6 +3,8 @@
 //using TrainingCenterAPI.Responses;
 //using TrainingCenterAPI.Services.Teacher;
 
+using TrainingCenterAPI.DTOs.Teacher.CLassesToTeacher;
+using TrainingCenterAPI.DTOs.Teacher.ViewMyClasses;
 using TrainingCenterAPI.Services.Teacher;
 
 namespace TrainingCenterAPI.Controllers
@@ -29,13 +31,34 @@ namespace TrainingCenterAPI.Controllers
 
             return Ok(response);
         }
-        [HttpPut("UpdateTeacher/{teacherId}")]
+        [HttpPost("AddClassToTeacher")]
+        public async Task<IActionResult> AddClassToTeacher([FromBody] AddClassTeacherDto request)
+        {
 
+
+            var response = await _teacherService.AddClassToTeacherAsync(request);
+
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+
+
+        [HttpPut("UpdateTeacher/{teacherId}")]
         public async Task<ActionResult<ResponseModel<Guid>>> UpdateTeacher(Guid teacherId, [FromBody] UpdateTeacherDto teacherDto)
         {
             return await _teacherService.UpdateTeacherAsync(teacherId, teacherDto);
         }
 
+
+
+        [HttpGet("GetProfileTeacherWithClasses/{teacherId}")]
+        public async Task<ActionResult<ResponseModel<TeacherViewDTO>>> GetProfileTeacherWithClasses(Guid teacherId)
+        {
+            return await _teacherService.GetProfileTeacherWithClassesAsync(teacherId);
+        }
 
         [HttpGet("GetAllTeachers")]
         public async Task<IActionResult> GetAllTeachers()
@@ -93,12 +116,6 @@ namespace TrainingCenterAPI.Controllers
 
 
 
-        //        // ✅ 6. جلب معلم + حصصه
-        //        [HttpGet("{teacherId}/classes")]
-        //        public async Task<ActionResult<ResponseModel<TeacherWithClassesDto>>> GetTeacherWithClasses(Guid teacherId)
-        //        {
-        //            return await _teacherService.GetTeacherWithClassesAsync(teacherId);
-        //        }
 
         //        // ✅ 7. جلب كل الطلاب لكل حصص المعلم
         //        [HttpGet("{teacherId}/students")]

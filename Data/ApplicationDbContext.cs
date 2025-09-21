@@ -45,6 +45,12 @@ namespace TrainingCenterAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Classes>()
+      .HasOne(c => c.Teacher)
+      .WithMany(t => t.Classes)
+      .HasForeignKey(c => c.TeacherId)
+      .OnDelete(DeleteBehavior.SetNull);
+
 
             modelBuilder.Entity<Classes>().HasQueryFilter(c => c.DeletedAt == null);
             //   modelBuilder.Entity<StudentClass>().HasQueryFilter(sc => sc.DeletedAt == null);

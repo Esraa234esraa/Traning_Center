@@ -61,6 +61,7 @@
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+
     }
 
 
@@ -90,5 +91,9 @@
         public string TeacherName { get; set; } = string.Empty;
         public List<StudentDto> Students { get; set; } = new List<StudentDto>();
     }
+
+    //New
+
+
 }
 

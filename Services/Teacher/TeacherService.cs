@@ -1,4 +1,6 @@
-﻿using TrainingCenterAPI.Services.Teacher;
+﻿using TrainingCenterAPI.DTOs.Teacher.CLassesToTeacher;
+using TrainingCenterAPI.DTOs.Teacher.ViewMyClasses;
+using TrainingCenterAPI.Services.Teacher;
 
 namespace TrainingCenterAPI.Services.Implementations
 {
@@ -8,13 +10,267 @@ namespace TrainingCenterAPI.Services.Implementations
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public TeacherService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public TeacherService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _configuration = configuration;
+
 
         }
+
+
+        public async Task<ResponseModel<Guid>> AddTeacherAsync(AddTeacherDto teacherDto)
+        {
+
+
+            try
+            {
+
+
+
+                // 1️⃣ إنشاء المستخدم
+                var user = new ApplicationUser
+                {
+                    UserName = teacherDto.Email,
+                    Email = teacherDto.Email,
+                    FullName = teacherDto.FullName,
+                    PhoneNumber = teacherDto.PhoneNumber,
+                    Role = "Teacher",
+
+                    IsActive = true
+                };
+
+                var result = await _userManager.CreateAsync(user, teacherDto.Password);
+                if (!result.Succeeded)
+                {
+                    return ResponseModel<Guid>.FailResponse("فشل إنشاء المعلم: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                }
+
+                // 2️⃣ إنشاء بيانات المعلم
+                var teacher = new TeacherDetails
+                {
+
+                    UserId = user.Id,
+                    City = teacherDto.City,
+                    Gender = teacherDto.Gender,
+                    CourseId = teacherDto.CourseId,
+                    Classes = new List<Classes>()
+                };
+
+                //// إنشاء 7 حصص تلقائي لكل معلم
+                //for (int i = 1; i <= 7; i++)
+                //{
+                //    teacher.Classes.Add(new Classes
+                //    {
+                //        Id = Guid.NewGuid(),           // يتولد تلقائي
+                //        Status = ClassStatus.Active,   // أو الحالة الأولية
+                //        CurrentStudentsCount = 0,
+                //        // نسيبه فاضي وسيتم تحديده عند إضافة أول طالب
+                //    });
+                //}
+
+
+                // 4️⃣ حفظ في قاعدة البيانات
+                _context.TeacherDetails.Add(teacher);
+                await _context.SaveChangesAsync();
+
+                // 5️⃣ إعادة DTO بدون Id من العميل
+                // teacherDto.Id = teacher.Id;
+                //  teacherDto.AvailableClasses = 7; // ✅ لأنه لسه كل الحصص فاضية
+                return ResponseModel<Guid>.SuccessResponse(user.Id, "تمت إضافة المعلم بنجاح");
+            }
+
+            catch (Exception ex)
+            {
+                return ResponseModel<Guid>.FailResponse($"{ex.Message} الطلب غير صالح");
+            }
+        }
+
+
+        public async Task<ResponseModel<Guid>> AddClassToTeacherAsync(AddClassTeacherDto Dto)
+        {
+
+            try
+            {
+
+                var teacher = await _context.TeacherDetails.FirstOrDefaultAsync(x => x.Id == Dto.TeacherId);
+                if (teacher == null)
+                    return ResponseModel<Guid>.FailResponse($" الطلب غير صالح");
+
+                var Class = await _context.Classes.Include(x => x.Teacher).Include(x => x.Bouquet)
+
+                    .ThenInclude(x => x.Level).ThenInclude(x => x.Course)
+
+                    .FirstOrDefaultAsync(x => x.Id == Dto.ClassId);
+                if (Class == null)
+                    return ResponseModel<Guid>.FailResponse($"هذه الحصة غير موجودة");
+
+                if (Class.Teacher != null)
+                    return ResponseModel<Guid>.FailResponse($"هذه الحصة مضاف لها معلم");
+
+                if (Class.Bouquet.Level.Course.Id != teacher.CourseId)
+
+                    return ResponseModel<Guid>.FailResponse($"هذه الحصة لا تخص كورس المعلم");
+
+                Class.TeacherId = Dto.TeacherId;
+
+                _context.Classes.Update(Class);
+                await _context.SaveChangesAsync();
+
+                return ResponseModel<Guid>.SuccessResponse(Class.Id, "تمت إضافة معلم الي حصة بنجاح");
+            }
+
+            catch (Exception ex)
+            {
+                return ResponseModel<Guid>.FailResponse($"{ex.Message} الطلب غير صالح");
+            }
+        }
+
+        public async Task<ResponseModel<List<GetAllTeacherDto>>> GetAllTeachersAsync()
+        {
+            var Teachers = await _context.TeacherDetails.Include(x => x.User).Include(x => x.Course)
+
+
+                .Include(x => x.Classes)
+                .AsNoTracking()
+                  .Where(x => x.IsDeleted == false)
+
+                  .Select(x => new GetAllTeacherDto
+                  {
+                      Id = x.Id,
+                      Email = x.User.Email,
+                      PhoneNumber = x.User.PhoneNumber,
+                      FullName = x.User.FullName,
+                      CourseName = x.Course.Name,
+                      City = x.City,
+                      Gender = x.Gender,
+                      AvailableClasses = 7 - (x.Classes.Count()),
+                      CourseId = x.Course.Id,
+
+                  }).ToListAsync();
+
+            if (Teachers.Count() <= 0)
+                return ResponseModel<List<GetAllTeacherDto>>.FailResponse("لا توجد معلمين اضيفت ");
+
+            return ResponseModel<List<GetAllTeacherDto>>.SuccessResponse(Teachers, "Teachers retrieved successfully");
+        }
+
+
+
+        // ✅ 4. تعديل بيانات معلم
+        public async Task<ResponseModel<Guid>> UpdateTeacherAsync(Guid teacherId, UpdateTeacherDto teacherDto)
+        {
+            var teacher = await _context.TeacherDetails
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.Id == teacherId);
+
+            if (teacher == null)
+                return ResponseModel<Guid>.FailResponse("المعلم غير موجود");
+
+            teacher.User.FullName = teacherDto.FullName;
+            teacher.User.Email = teacherDto.Email;
+            teacher.User.PhoneNumber = teacherDto.PhoneNumber;
+            teacher.City = teacherDto.City;
+            teacher.CourseId = teacherDto.CourseId;
+            //   teacher.CourseName = teacherDto.CourseName;
+
+            _context.TeacherDetails.Update(teacher);
+            await _context.SaveChangesAsync();
+
+            return ResponseModel<Guid>.SuccessResponse(teacher.Id, "تم تحديث بيانات المعلم");
+        }
+
+        // ✅ 5. حذف معلم
+        public async Task<ResponseModel<bool>> DeleteTeacherAsync(Guid teacherId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+
+            try
+            {
+                var teacher = await _context.TeacherDetails
+                    .Include(t => t.User)
+                    .FirstOrDefaultAsync(t => t.Id == teacherId);
+
+                if (teacher == null)
+                    return ResponseModel<bool>.FailResponse("المعلم غير موجود");
+                teacher.IsDeleted = true;
+                _context.TeacherDetails.Remove(teacher);
+                await _userManager.DeleteAsync(teacher.User);
+
+
+                // نحذف أولاً الـ User من الهوية
+
+
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+
+                return ResponseModel<bool>.SuccessResponse(true, "تم حذف المعلم بنجاح");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return ResponseModel<bool>.FailResponse($"{ex.Message} فشل الحذف");
+            }
+        }
+
+
+
+        //   ✅ 6. بورفايل المعلم: معلم + حصصه
+        public async Task<ResponseModel<TeacherViewDTO>> GetProfileTeacherWithClassesAsync(Guid teacherId)
+        {
+            try
+            {
+                var teacher = await _context.TeacherDetails
+                .Where(t => t.Id == teacherId && t.IsDeleted != true)
+                 .Select(t => new TeacherViewDTO
+                 {
+                     Id = t.Id,
+                     CourseName = t.Course.Name,
+
+                     Classes = t.Classes.Select(c => new TeacherClassDtoView
+                     {
+                         Id = c.Id,
+                         LevelNumber = c.Bouquet.Level.LevelNumber,
+                         LevelName = c.Bouquet.Level.Name ?? "not add name",
+                         PackageSize = c.Bouquet.StudentsPackageCount,
+                         CurrentStudentsCount = c.GetCurrentStudentClasses.Count(),
+                         Status = c.Status,
+                         ClassTime = c.ClassTime,
+                         StartDate = c.StartDate,
+                         EndDate = c.EndDate,
+
+                         Students = c.GetCurrentStudentClasses
+               .Select(cs => new CurrentStudentForTeacherDTO
+               {
+                   // 👈 مش StudentName
+                   FullName = cs.Student.StudentName,
+
+               }).ToList()
+                     }).ToList()
+                 })
+                   .FirstOrDefaultAsync();
+                if (teacher == null)
+                    return ResponseModel<TeacherViewDTO>.FailResponse("هذ المعلم غير موجود");
+
+                return ResponseModel<TeacherViewDTO>.SuccessResponse(teacher, "تم جلب بيانات المعلم وحصصه");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel<TeacherViewDTO>.FailResponse($"{ex.Message} حدث خطاء ");
+            }
+
+
+        }
+
+
+
+
+        #region old
+
 
         //        // ✅ 1. جلب كل المعلمين
         //        //public async Task<ResponseModel<List<TeacherDto>>> GetAllTeachersAsync()
@@ -119,202 +375,18 @@ namespace TrainingCenterAPI.Services.Implementations
         //        //}
 
         //        // ✅ 3. إضافة معلم جديد
-        public async Task<ResponseModel<Guid>> AddTeacherAsync(AddTeacherDto teacherDto)
+
+
+
+
+
+        public Task<ResponseModel<TeacherWithClassesDto>> GetTeacherWithClassesAsync(Guid teacherId)
         {
-
-
-            try
-            {
-
-
-
-                // 1️⃣ إنشاء المستخدم
-                var user = new ApplicationUser
-                {
-                    UserName = teacherDto.Email,
-                    Email = teacherDto.Email,
-                    FullName = teacherDto.FullName,
-                    PhoneNumber = teacherDto.PhoneNumber,
-                    Role = "Teacher",
-
-                    IsActive = true
-                };
-
-                var result = await _userManager.CreateAsync(user, teacherDto.Password);
-                if (!result.Succeeded)
-                {
-                    return ResponseModel<Guid>.FailResponse("فشل إنشاء المعلم: " + string.Join(", ", result.Errors.Select(e => e.Description)));
-                }
-
-                // 2️⃣ إنشاء بيانات المعلم
-                var teacher = new TeacherDetails
-                {
-
-                    UserId = user.Id,
-                    City = teacherDto.City,
-                    Gender = teacherDto.Gender,
-                    CourseId = teacherDto.CourseId,
-                    Classes = new List<Classes>()
-                };
-
-                //// إنشاء 7 حصص تلقائي لكل معلم
-                //for (int i = 1; i <= 7; i++)
-                //{
-                //    teacher.Classes.Add(new Classes
-                //    {
-                //        Id = Guid.NewGuid(),           // يتولد تلقائي
-                //        Status = ClassStatus.Active,   // أو الحالة الأولية
-                //        CurrentStudentsCount = 0,
-                //        // نسيبه فاضي وسيتم تحديده عند إضافة أول طالب
-                //    });
-                //}
-
-
-                // 4️⃣ حفظ في قاعدة البيانات
-                _context.TeacherDetails.Add(teacher);
-                await _context.SaveChangesAsync();
-
-                // 5️⃣ إعادة DTO بدون Id من العميل
-                // teacherDto.Id = teacher.Id;
-                //  teacherDto.AvailableClasses = 7; // ✅ لأنه لسه كل الحصص فاضية
-                return ResponseModel<Guid>.SuccessResponse(user.Id, "تمت إضافة المعلم بنجاح");
-            }
-
-            catch (Exception ex)
-            {
-                return ResponseModel<Guid>.FailResponse($"{ex.Message} الطلب غير صالح");
-            }
+            throw new NotImplementedException();
         }
 
-        public async Task<ResponseModel<List<GetAllTeacherDto>>> GetAllTeachersAsync()
-        {
-            var Teachers = await _context.TeacherDetails.Include(x => x.User).Include(x => x.Course)
-
-
-                .Include(x => x.Classes)
-                .AsNoTracking()
-                  .Where(x => x.IsDeleted == false)
-
-                  .Select(x => new GetAllTeacherDto
-                  {
-                      Id = x.Id,
-                      Email = x.User.Email,
-                      PhoneNumber = x.User.PhoneNumber,
-                      FullName = x.User.FullName,
-                      CourseName = x.Course.Name,
-                      City = x.City,
-                      Gender = x.Gender,
-                      AvailableClasses = 7 - (x.Classes.Count()),
-                      CourseId = x.Course.Id,
-
-                  }).ToListAsync();
-
-            if (Teachers.Count() <= 0)
-                return ResponseModel<List<GetAllTeacherDto>>.FailResponse("لا توجد معلمين اضيفت ");
-
-            return ResponseModel<List<GetAllTeacherDto>>.SuccessResponse(Teachers, "Teachers retrieved successfully");
-        }
-
-
-
-        // ✅ 4. تعديل بيانات معلم
-        public async Task<ResponseModel<Guid>> UpdateTeacherAsync(Guid teacherId, UpdateTeacherDto teacherDto)
-        {
-            var teacher = await _context.TeacherDetails
-                .Include(t => t.User)
-                .FirstOrDefaultAsync(t => t.Id == teacherId);
-
-            if (teacher == null)
-                return ResponseModel<Guid>.FailResponse("المعلم غير موجود");
-
-            teacher.User.FullName = teacherDto.FullName;
-            teacher.User.Email = teacherDto.Email;
-            teacher.User.PhoneNumber = teacherDto.PhoneNumber;
-            teacher.City = teacherDto.City;
-            teacher.CourseId = teacherDto.CourseId;
-            //   teacher.CourseName = teacherDto.CourseName;
-
-            _context.TeacherDetails.Update(teacher);
-            await _context.SaveChangesAsync();
-
-            return ResponseModel<Guid>.SuccessResponse(teacher.Id, "تم تحديث بيانات المعلم");
-        }
-
-        // ✅ 5. حذف معلم
-        public async Task<ResponseModel<bool>> DeleteTeacherAsync(Guid teacherId)
-        {
-            using var transaction = await _context.Database.BeginTransactionAsync();
-
-
-            try
-            {
-                var teacher = await _context.TeacherDetails
-                    .Include(t => t.User)
-                    .FirstOrDefaultAsync(t => t.Id == teacherId);
-
-                if (teacher == null)
-                    return ResponseModel<bool>.FailResponse("المعلم غير موجود");
-                await _userManager.DeleteAsync(teacher.User);
-
-                _context.TeacherDetails.Remove(teacher);
-                // نحذف أولاً الـ User من الهوية
-
-
-
-                await _context.SaveChangesAsync();
-
-                await transaction.CommitAsync();
-
-
-                return ResponseModel<bool>.SuccessResponse(true, "تم حذف المعلم بنجاح");
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                return ResponseModel<bool>.FailResponse($"{ex.Message} فشل الحذف");
-            }
-        }
-
-        //        // ✅ 6. معلم + حصصه
-        //        //    public async Task<ResponseModel<TeacherWithClassesDto>> GetTeacherWithClassesAsync(Guid teacherId)
-        //        //    {
-        //        //        var teacher = await _context.TeacherDetails
-        //        //            .Include(t => t.User)
-        //        //            .Include(t => t.Classes)
-        //        //            .Include(t => t.Classes)
-        //        //.ThenInclude(c => c.Level)
-
-        //        //            .FirstOrDefaultAsync(t => t.Id == teacherId);
-
-        //        //        if (teacher == null)
-        //        //            return ResponseModel<TeacherWithClassesDto>.FailResponse("المعلم غير موجود");
-
-        //        //        var dto = new TeacherWithClassesDto
-        //        //        {
-        //        //            Id = teacher.Id,
-        //        //            FullName = teacher.User.FullName,
-        //        //            Email = teacher.User.Email,
-        //        //            PhoneNumber = teacher.User.PhoneNumber,
-        //        //            City = teacher.City,
-        //        //            CourseName = teacher.CourseName,
-        //        //            Classes = teacher.Classes.Select(c => new ClassDto
-        //        //            {
-        //        //                Id = c.Id,
-        //        //                LevelNumber = c.Level.LevelNumber,    // 👈 الرقم من جدول Level
-        //        //                LevelName = c.Level.Name,             // 👈 الاسم لو انت ضايفه في جدول Level
-        //        //                PackageSize = c.PackageSize,
-        //        //                CurrentStudentsCount = c.StudentClasses.Count,
-        //        //                Status = c.Status,
-        //        //                ClassTime = c.ClassTime,
-        //        //                StartDate = c.StartDate,
-        //        //                EndDate = c.EndDate
-        //        //            }).ToList()
-
-
-        //        //        };
-
-        //        //        return ResponseModel<TeacherWithClassesDto>.SuccessResponse(dto, "تم جلب بيانات المعلم وحصصه");
-        //        //    }
+        //    return ResponseModel<TeacherWithClassesDto>.SuccessResponse(dto, "تم جلب بيانات المعلم وحصصه");
+        //}
 
         //        // ✅ 7. كل الطلاب لكل حصص المعلم
         //        //public async Task<ResponseModel<AllStudentsForTeacherDto>> GetAllStudentsByTeacherIdAsync(Guid teacherId)
@@ -395,8 +467,11 @@ namespace TrainingCenterAPI.Services.Implementations
 
         //            return new JwtSecurityTokenHandler().WriteToken(token);
         //        }
+        #endregion
 
     }
+
 }
+
 
 
