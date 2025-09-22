@@ -20,11 +20,11 @@ namespace TrainingCenterAPI.Controllers
             _teacherService = teacherService;
         }
         [HttpPost("add")]
-        public async Task<IActionResult> AddTeacher([FromBody] TeacherCreateRequest request)
+        public async Task<IActionResult> AddTeacher([FromBody] AddTeacherDto request)
         {
 
 
-            var response = await _teacherService.AddTeacherAsync(request.Teacher);
+            var response = await _teacherService.AddTeacherAsync(request);
 
             if (!response.Success)
                 return BadRequest(response);
