@@ -33,6 +33,24 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
 
 
                 }
+
+                var classs = _context.Classes
+    .Include(x => x.Bouquet) // if you need Bouquet
+    .Include(x => x.GetCurrentStudentClasses)
+        .ThenInclude(cs => cs.Student) // navigate to Student
+    .FirstOrDefault(x => x.Id == dto.ClassId);
+                ;
+
+
+                if (classs != null)
+                {
+                    if (classs.Bouquet.StudentsPackageCount <= classs.GetCurrentStudentClasses.Count())
+                    {
+                        return ResponseModel<Guid>.FailResponse($" هذه الحصه ممتلئه فشلت الاضافة  ");
+                    }
+                }
+
+
                 var student = new CurrentStudent
                 {
                     StudentName = dto.StudentName,
@@ -40,7 +58,9 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
                     Gender = dto.Gender,
                     City = dto.City,
                     PhoneNumber = dto.PhoneNumber,
-                    IsPaid = dto.IsPaid
+                    IsPaid = dto.IsPaid,
+
+
                 };
 
                 // link only one class
@@ -65,17 +85,17 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
         {
             var Students = await _context.currents
         .AsNoTracking()
-       .Where(x => !x.IsDeleted)
-       .Select(x => new GetAllCurrentStudentDTO
-       {
-           Id = x.Id,
-           StudentName = x.StudentName,
-           City = x.City,
-           PhoneNumber = x.PhoneNumber,
-           IsPaid = x.IsPaid,
+        .Where(x => !x.IsDeleted)
+        .Select(x => new GetAllCurrentStudentDTO
+        {
+            Id = x.Id,
+            StudentName = x.StudentName,
+            City = x.City,
+            PhoneNumber = x.PhoneNumber,
+            IsPaid = x.IsPaid,
 
-           // 👇 كل الكلاسات اللي الطالب فيها
-           Classes = x.GetCurrentStudentClasses
+            // 👇 كل الكلاسات اللي الطالب فيها
+            Classes = x.GetCurrentStudentClasses
                .Select(cs => new ClassForStudentDTO
                {
                    ClassId = cs.Class.Id,
@@ -85,8 +105,8 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
                    LevelNumber = cs.Class.Bouquet.Level.LevelNumber,
                    LevelName = cs.Class.Bouquet.Level.Name
                }).ToList()
-       })
-       .ToListAsync();
+        })
+        .ToListAsync();
 
 
             if (Students.Count() <= 0)
