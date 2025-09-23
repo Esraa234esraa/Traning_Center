@@ -15,7 +15,7 @@ namespace TrainingCenterAPI.Services
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
             var email = new MimeMessage();
-            email.From.Add(new MailboxAddress("My App", _config["EmailSettings:From"]));
+            email.From.Add(new MailboxAddress("مركز اللغة المثاليه", _config["EmailSettings:From"]));
             email.To.Add(new MailboxAddress("", toEmail));
             email.Subject = subject;
 
