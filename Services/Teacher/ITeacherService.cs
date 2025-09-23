@@ -15,6 +15,11 @@ namespace TrainingCenterAPI.Services.Teacher
         //Task<ResponseModel<TeacherLoginResponse>> LoginTeacherAsync(string email, string password);
 
         Task<ResponseModel<TeacherViewDTO>> GetProfileTeacherWithClassesAsync(Guid teacherId);
+        Task<ResponseModel<TeacherByIdDTO>> GetTeacherById(Guid teacherId);
+
+
+
+
         Task<ResponseModel<TeacherWithClassesDto>> GetTeacherWithClassesAsync(Guid teacherId);
         //Task<ResponseModel<AllStudentsForTeacherDto>> GetAllStudentsByTeacherIdAsync(Guid teacherId);
     }

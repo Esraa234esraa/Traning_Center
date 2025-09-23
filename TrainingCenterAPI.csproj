@@ -7,6 +7,7 @@
     <UserSecretsId>aspnet-TrainingCenterAPI-49c29bbc-da6b-4070-bc12-08667a85229f</UserSecretsId>
   </PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="MailKit" Version="4.13.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" NoWarn="NU1605" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.15" NoWarn="NU1605" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
