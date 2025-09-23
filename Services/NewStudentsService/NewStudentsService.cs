@@ -103,6 +103,7 @@ namespace TrainingCenterAPI.Services.NewStudentsService
 
                     Id = item.Id,
                     StudentName = item.StudentName,
+                    Email = item.Email,
                     PhoneNumber = item.PhoneNumber,
                     Gender = item.Gender,
                     City = item.City,
@@ -141,6 +142,7 @@ namespace TrainingCenterAPI.Services.NewStudentsService
 
                     Id = item.Id,
                     StudentName = item.StudentName,
+                    Email = item.Email,
                     PhoneNumber = item.PhoneNumber,
                     Gender = item.Gender,
                     City = item.City,
