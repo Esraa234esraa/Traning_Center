@@ -277,7 +277,7 @@ namespace TrainingCenterAPI.Services.Implementations
                      FullName = t.User.FullName,
                      Email = t.User.Email,
                      City = t.City,
-                     PhoneNumber = t.User.FullName,
+                     PhoneNumber = t.User.PhoneNumber,
                      CourseName = t.Course.Name,
                      CourseId = t.CourseId
                  })
