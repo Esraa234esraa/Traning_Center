@@ -265,7 +265,37 @@ namespace TrainingCenterAPI.Services.Implementations
 
 
         }
+        public async Task<ResponseModel<TeacherByIdDTO>> GetTeacherById(Guid teacherId)
+        {
+            try
+            {
+                var teacher = await _context.TeacherDetails
+                .Where(t => t.Id == teacherId && t.IsDeleted != true)
+                 .Select(t => new TeacherByIdDTO
+                 {
+                     Id = t.Id,
+                     FullName = t.User.FullName,
+                     Email = t.User.Email,
+                     City = t.City,
+                     PhoneNumber = t.User.FullName,
+                     CourseName = t.Course.Name,
+                     CourseId = t.CourseId
+                 })
 
+
+                   .FirstOrDefaultAsync();
+                if (teacher == null)
+                    return ResponseModel<TeacherByIdDTO>.FailResponse("هذ المعلم غير موجود");
+
+                return ResponseModel<TeacherByIdDTO>.SuccessResponse(teacher, "تم جلب بيانات المعلم ");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel<TeacherByIdDTO>.FailResponse($"{ex.Message} حدث خطاء ");
+            }
+
+
+        }
 
 
 

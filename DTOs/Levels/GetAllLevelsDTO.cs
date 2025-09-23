@@ -11,6 +11,8 @@ namespace TrainingCenterAPI.DTOs.Levels
         public int LevelNumber { get; set; } // من 1 إلى 7
 
         public string? Name { get; set; }
+        public string? LevelName { get; set; }
+
 
 
         public string CourseName { get; set; }

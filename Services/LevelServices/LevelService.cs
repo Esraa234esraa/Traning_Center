@@ -88,6 +88,7 @@
                 {
                     Id = x.Id,
                     Name = x.Name,
+                    LevelName = x.Name,
                     LevelNumber = x.LevelNumber,
                     CourseName = x.Course.Name,
 

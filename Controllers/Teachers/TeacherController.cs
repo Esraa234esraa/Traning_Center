@@ -59,6 +59,14 @@ namespace TrainingCenterAPI.Controllers
         {
             return await _teacherService.GetProfileTeacherWithClassesAsync(teacherId);
         }
+        [HttpGet("GetTeacherById/{teacherId}")]
+        public async Task<ActionResult<ResponseModel<TeacherByIdDTO>>> GetTeacherById(Guid teacherId)
+        {
+            return await _teacherService.GetTeacherById(teacherId);
+        }
+
+
+
 
         [HttpGet("GetAllTeachers")]
         public async Task<IActionResult> GetAllTeachers()
@@ -77,6 +85,11 @@ namespace TrainingCenterAPI.Controllers
         {
             return await _teacherService.DeleteTeacherAsync(teacherId);
         }
+
+
+
+
+
 
 
 

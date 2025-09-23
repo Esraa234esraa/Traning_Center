@@ -7,6 +7,7 @@ namespace TrainingCenterAPI.DTOs.NewStudents
         public required string StudentName { get; set; }
         public string? Gender { get; set; }
         public string? City { get; set; }
+        public string Email { get; set; }
         public required string PhoneNumber { get; set; }
 
         public DateOnly Date { get; set; }

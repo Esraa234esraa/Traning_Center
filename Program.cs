@@ -67,6 +67,7 @@ builder.Services.AddScoped<IBouquetService, BouquetService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<ICurrentStudentService, CurrentStudentService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddTransient<EmailService>();
 
 
 //builder.Services.AddScoped<IOtpService, OtpService>();

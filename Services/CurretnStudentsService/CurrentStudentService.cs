@@ -167,7 +167,7 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
             try
             {
                 var student = await _context.currents
-        .Include(s => s.GetCurrentStudentClasses) // تحميل العلاقات
+            .Include(s => s.GetCurrentStudentClasses) // تحميل العلاقات
              .FirstOrDefaultAsync(s => s.Id == Id);
 
                 if (student == null)

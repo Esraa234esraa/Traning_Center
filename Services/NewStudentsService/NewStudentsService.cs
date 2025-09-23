@@ -8,12 +8,12 @@ namespace TrainingCenterAPI.Services.NewStudentsService
     {
         private readonly ApplicationDbContext _context;
 
-
-        public NewStudentsService(ApplicationDbContext context)
+        public EmailService email;
+        public NewStudentsService(ApplicationDbContext context, EmailService _email)
         {
             _context = context;
 
-
+            email = _email;
         }
         public async Task<ResponseModel<Guid>> AddNewStudent(PostNewStudentDTO DTO)
         {
@@ -31,23 +31,38 @@ namespace TrainingCenterAPI.Services.NewStudentsService
                 return ResponseModel<Guid>.FailResponse("لايمكن الحجز يوم الجمعة او السبت");
 
             }
-
-
-            var newStudent = new NewStudent()
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                StudentName = DTO.StudentName,
-                PhoneNumber = DTO.PhoneNumber,
-                City = DTO.City,
-                Date = DTO.Date,
-                Time = DTO.Time,
-                Gender = DTO.Gender,
-                status = NewStudentStatus.New,
 
 
-            };
-            _context.newStudents.Add(newStudent);
-            await _context.SaveChangesAsync();
-            return ResponseModel<Guid>.SuccessResponse(newStudent.Id, "تمت الاضافة بنجاح");
+                var newStudent = new NewStudent()
+                {
+                    StudentName = DTO.StudentName,
+                    PhoneNumber = DTO.PhoneNumber,
+                    Email = DTO.Email,
+                    City = DTO.City,
+                    Date = DTO.Date,
+                    Time = DTO.Time,
+                    Gender = DTO.Gender,
+                    status = NewStudentStatus.New,
+
+
+                };
+                _context.newStudents.Add(newStudent);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                //      await email.SendEmailAsync(newStudent.Email, "Confirmations", $"you book in {newStudent.Date} at  {newStudent.Time}");
+
+
+                return ResponseModel<Guid>.SuccessResponse(newStudent.Id, "تمت الاضافة بنجاح");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return ResponseModel<Guid>.FailResponse("فشل الاضافة ");
+            }
 
         }
 
