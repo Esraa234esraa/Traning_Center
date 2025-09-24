@@ -1,10 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using TrainingCenterAPI.Models;
-
-public class JwtService
+﻿public class JwtService
 {
     private readonly IConfiguration _configuration;
 
@@ -20,7 +14,8 @@ public class JwtService
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new Claim(ClaimTypes.Name, user.UserName ?? ""),
         new Claim(ClaimTypes.Email, user.Email ?? ""),
-        new Claim("FullName", user.FullName ?? "")
+        new Claim("FullName", user.FullName ?? ""),
+
     };
 
         foreach (var role in roles)

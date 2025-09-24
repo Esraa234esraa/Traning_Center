@@ -187,7 +187,7 @@ namespace TrainingCenterAPI.Services.ClassesServeice
                 Class.IsDeleted = true;
                 _context.Classes.Update(Class);
                 await _context.SaveChangesAsync();
-                return ResponseModel<bool>.SuccessResponse(true, "نم نقل المستوى الى سلة المهملات");
+                return ResponseModel<bool>.SuccessResponse(true, "نم نقل    الحصة الى سلة المهملات");
             }
             catch (Exception ex)
             {

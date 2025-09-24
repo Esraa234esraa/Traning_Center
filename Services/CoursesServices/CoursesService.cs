@@ -107,7 +107,7 @@ namespace TrainingCenterAPI.Services.CoursesServices
         {
             try
             {
-                var course = await _context.Course.FirstOrDefaultAsync(x => x.Id == x.Id && x.IsDeleted == false);
+                var course = await _context.Course.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
                 if (course == null)
                     return ResponseModel<bool>.FailResponse("الدراسة ليست موجودة");
 

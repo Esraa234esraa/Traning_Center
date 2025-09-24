@@ -214,7 +214,7 @@ namespace TrainingCenterAPI.Services.NewStudentsService
             student.Date = DTO.Date;
             student.Time = DTO.Time;
             student.Gender = DTO.Gender;
-            student.status = NewStudentStatus.New;
+            student.status = NewStudentStatus.waiting;
             _context.newStudents.Update(student);
             await _context.SaveChangesAsync();
             return ResponseModel<Guid>.SuccessResponse(student.Id, "تمت التعديل بنجاح ");
