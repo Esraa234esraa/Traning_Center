@@ -86,10 +86,10 @@
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            if (!roles.Contains("Admin"))
-            {
-                return ResponseModel<LoginResponseDto>.FailResponse("Access denied: Only admins can login");
-            }
+            //if (!roles.Contains("Admin"))
+            //{
+            //    return ResponseModel<LoginResponseDto>.FailResponse("Access denied: Only admins can login");
+            //}
 
             var (token, expiresAt) = _jwtService.GenerateToken(user, roles);
 
@@ -108,7 +108,8 @@
                 FullName = user.FullName,
                 Email = user.Email,
                 Role = roles.FirstOrDefault() ?? "User",
-                ExpiresAt = expiresAt
+                ExpiresAt = expiresAt,
+                Token = token,
             };
 
             return ResponseModel<LoginResponseDto>.SuccessResponse(response, "Login successful");

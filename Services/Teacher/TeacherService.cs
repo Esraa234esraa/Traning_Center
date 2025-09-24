@@ -195,8 +195,8 @@ namespace TrainingCenterAPI.Services.Implementations
                 if (teacher == null)
                     return ResponseModel<bool>.FailResponse("المعلم غير موجود");
                 teacher.IsDeleted = true;
-                _context.TeacherDetails.Remove(teacher);
-                await _userManager.DeleteAsync(teacher.User);
+                _context.TeacherDetails.Update(teacher);
+                await _userManager.UpdateAsync(teacher.User);
 
 
                 // نحذف أولاً الـ User من الهوية

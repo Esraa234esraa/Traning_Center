@@ -1,4 +1,5 @@
-﻿using TrainingCenterAPI.Services.ClassesServeice;
+﻿using TrainingCenterAPI.Services.BasketServices;
+using TrainingCenterAPI.Services.ClassesServeice;
 using TrainingCenterAPI.Services.CurretnStudentsService;
 using TrainingCenterAPI.Services.Implementations;
 using TrainingCenterAPI.Services.Teacher;
@@ -67,6 +68,7 @@ builder.Services.AddScoped<IBouquetService, BouquetService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<ICurrentStudentService, CurrentStudentService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<IBasketServices, BasketServices>();
 builder.Services.AddTransient<EmailService>();
 
 
