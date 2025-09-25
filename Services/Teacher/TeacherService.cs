@@ -224,8 +224,8 @@ namespace TrainingCenterAPI.Services.Implementations
         {
             try
             {
-                var teacher = await _context.TeacherDetails
-                .Where(t => t.Id == teacherId && t.IsDeleted != true)
+                var teacher = await _context.TeacherDetails.Include(x => x.User)
+                .Where(t => t.User.Id == teacherId && t.IsDeleted != true)
                  .Select(t => new TeacherViewDTO
                  {
                      Id = t.Id,
