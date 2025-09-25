@@ -415,6 +415,36 @@ namespace TrainingCenterAPI.Services.Implementations
             throw new NotImplementedException();
         }
 
+        Task<ResponseModel<List<TeacherWithClassesDto>>> ITeacherService.GetAllTeachersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResponseModel<TeacherWithClassesDto>> GetTeacherByIdAsync(Guid teacherId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResponseModel<TeacherDto>> AddTeacherAsync(TeacherDto teacherDto, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResponseModel<TeacherDto>> UpdateTeacherAsync(Guid teacherId, TeacherDto teacherDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResponseModel<TeacherLoginResponse>> LoginTeacherAsync(string email, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResponseModel<AllStudentsForTeacherDto>> GetAllStudentsByTeacherIdAsync(Guid teacherId)
+        {
+            throw new NotImplementedException();
+        }
+
         //    return ResponseModel<TeacherWithClassesDto>.SuccessResponse(dto, "تم جلب بيانات المعلم وحصصه");
         //}
 
