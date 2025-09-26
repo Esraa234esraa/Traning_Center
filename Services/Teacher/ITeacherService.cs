@@ -7,12 +7,12 @@ namespace TrainingCenterAPI.Services.Teacher
     {
         // CRUD
         Task<ResponseModel<List<GetAllTeacherDto>>> GetAllTeachersAsync();
-        //Task<ResponseModel<TeacherWithClassesDto>> GetTeacherByIdAsync(Guid teacherId);
+
         Task<ResponseModel<Guid>> AddTeacherAsync(AddTeacherDto teacherDto);
         Task<ResponseModel<Guid>> AddClassToTeacherAsync(AddClassTeacherDto Dto);
         Task<ResponseModel<Guid>> UpdateTeacherAsync(Guid teacherId, UpdateTeacherDto teacherDto);
         Task<ResponseModel<bool>> DeleteTeacherAsync(Guid teacherId);
-        //Task<ResponseModel<TeacherLoginResponse>> LoginTeacherAsync(string email, string password);
+
 
         Task<ResponseModel<TeacherViewDTO>> GetProfileTeacherWithClassesAsync(Guid teacherId);
         Task<ResponseModel<TeacherByIdDTO>> GetTeacherById(Guid teacherId);
@@ -20,7 +20,6 @@ namespace TrainingCenterAPI.Services.Teacher
 
 
 
-        Task<ResponseModel<TeacherWithClassesDto>> GetTeacherWithClassesAsync(Guid teacherId);
-        //Task<ResponseModel<AllStudentsForTeacherDto>> GetAllStudentsByTeacherIdAsync(Guid teacherId);
+
     }
 }

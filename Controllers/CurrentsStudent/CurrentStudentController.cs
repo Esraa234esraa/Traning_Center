@@ -25,9 +25,9 @@ namespace TrainingCenterAPI.Controllers.CurrentsStudent
             return Ok(result);
         }
         [HttpGet("GetAllCurrentStudent")]
-        public async Task<IActionResult> GetAllCurrentStudent()
+        public async Task<IActionResult> GetAllCurrentStudent([FromQuery] GetAllCurrentStudentQuery request)
         {
-            var result = await _currentStudentService.GetAllCurrentStudent();
+            var result = await _currentStudentService.GetAllCurrentStudent(request);
 
 
             return Ok(result);

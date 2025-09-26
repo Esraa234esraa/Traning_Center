@@ -53,7 +53,12 @@ namespace TrainingCenterAPI.Services.NewStudentsService
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
-                await email.SendEmailAsync(newStudent.Email, "Confirmation", $"     مرحبا بيك في مركز اللغة المثاليه لقد تم الحجز  {newStudent.Date} الساعة  {newStudent.Time}");
+                await email.SendEmailAsync(newStudent.Email, "Confirmation", $"    " +
+                    $" مرحبا بيك في مركز اللغة المثاليه لقد تم الحجز  " +
+                    $"التاريخ {Environment.NewLine}" +
+                    $"{newStudent.Date} " +
+                    $"الساعة  {Environment.NewLine}" +
+                $" {newStudent.Time}");
 
 
                 return ResponseModel<Guid>.SuccessResponse(newStudent.Id, "تمت الاضافة بنجاح");

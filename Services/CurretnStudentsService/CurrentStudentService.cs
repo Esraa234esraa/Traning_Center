@@ -1,4 +1,6 @@
-﻿using TrainingCenterAPI.DTOs.CurrentStudents;
+﻿using System.Linq.Expressions;
+using TrainingCenterAPI.DTOs.CurrentStudents;
+using TrainingCenterAPI.Helpers;
 using TrainingCenterAPI.Models.Students;
 using static TrainingCenterAPI.Enums.Enums;
 
@@ -9,12 +11,14 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        public ResponseDTO _ResponseDTO;
 
         public CurrentStudentService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
             _configuration = configuration;
+            _ResponseDTO = new ResponseDTO();
 
         }
 
@@ -81,11 +85,24 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
             }
         }
 
-        public async Task<ResponseModel<List<GetAllCurrentStudentDTO>>> GetAllCurrentStudent()
+        public async Task<ResponseModel<ResponseDTO>> GetAllCurrentStudent(GetAllCurrentStudentQuery request)
         {
+            //filter
+
+
+            var filterConditions = new Dictionary<Expression<Func<CurrentStudent, bool>>, bool>();
+
+            if (!string.IsNullOrEmpty(request.SearchWord))
+            {
+                filterConditions.Add(x => x.StudentName == request.SearchWord ||
+                                          x.StudentName.Contains(request.SearchWord)
+                                          , true);
+            }
+
             var Students = await _context.currents
-        .AsNoTracking()
-        .Where(x => !x.IsDeleted)
+            .AsNoTracking()
+            .Where(x => !x.IsDeleted)
+         .ApplyFilters(filterConditions, request.PageNumber, request.PageSize, ref _ResponseDTO)
         .Select(x => new GetAllCurrentStudentDTO
         {
             Id = x.Id,
@@ -110,9 +127,9 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
 
 
             if (Students.Count() <= 0)
-                return ResponseModel<List<GetAllCurrentStudentDTO>>.FailResponse("لا توجد حصص اضيفتة ");
-
-            return ResponseModel<List<GetAllCurrentStudentDTO>>.SuccessResponse(Students, "Classes retrieved successfully");
+                return ResponseModel<ResponseDTO>.FailResponse("لا توجد حصص اضيفتة ");
+            _ResponseDTO.Result = Students;
+            return ResponseModel<ResponseDTO>.SuccessResponse(_ResponseDTO, "Classes retrieved successfully");
         }
         public async Task<ResponseModel<Guid>> UpdateCurrentStudent(Guid Id, UpdateCurrentStudentDTO dTO)
         {
