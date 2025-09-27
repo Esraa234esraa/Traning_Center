@@ -1,11 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TrainingCenterAPI.DTOs;
-using TrainingCenterAPI.DTOs.Admin;
-using TrainingCenterAPI.DTOs.Auth;
-using TrainingCenterAPI.Responses;
-using TrainingCenterAPI.Services.Auth;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace TrainingCenterAPI.Controllers.Admin
 {
