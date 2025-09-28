@@ -13,5 +13,12 @@ namespace TrainingCenterAPI.Services.BasketServices
         Task<ResponseModel<List<GetAllTeacherDto>>> GetAllTeachersAsyncDelete();
         Task<ResponseModel<List<GetAllCoursesDto>>> GetAllCoursesAsyncDelete();
         Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesDelete();
+        Task<ResponseModel<bool>> DeleteTeacherAsyncDelete(Guid teacherId);
+        Task<ResponseModel<string>> DeleteNewStudentDelete(Guid Id);
+        Task<ResponseModel<string>> DeleteWaitingStudentDelete(Guid Id);
+        Task<ResponseModel<bool>> DeleteCurrentStudentDelete(Guid Id);
+        Task<ResponseModel<bool>> DeleteCourseAsyncDelete(Guid id);
+        Task<ResponseModel<bool>> DeleteClassDelete(Guid Id);
+
     }
 }

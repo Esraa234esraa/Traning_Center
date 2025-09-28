@@ -61,12 +61,17 @@ namespace TrainingCenterAPI.Services.Implementations
                 };
 
 
+                //string opt = email.GenerateOtp();
+                //email.SendVerificationEmailAsync(teacher.User.Email, opt);
+
 
 
                 // 4️⃣ حفظ في قاعدة البيانات
                 _context.TeacherDetails.Add(teacher);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+
                 await email.SendEmailAsync(
       teacher.User.Email,
     "دوام",
@@ -138,6 +143,7 @@ namespace TrainingCenterAPI.Services.Implementations
 
                   .Select(x => new GetAllTeacherDto
                   {
+                      UserId = x.UserId,
                       Id = x.Id,
                       Email = x.User.Email,
                       PhoneNumber = x.User.PhoneNumber,
@@ -156,6 +162,23 @@ namespace TrainingCenterAPI.Services.Implementations
             return ResponseModel<List<GetAllTeacherDto>>.SuccessResponse(Teachers, "Teachers retrieved successfully");
         }
 
+        public async Task<ResponseModel<Guid>> ResetPassword(Guid UserId, string Password)
+        {
+            var user = await _userManager.FindByIdAsync(UserId.ToString());
+            if (user == null)
+                return ResponseModel<Guid>.FailResponse("المعلم غير موجود");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, Password);
+            if (!result.Succeeded)
+            {
+
+                return ResponseModel<Guid>.FailResponse("فشل تحديث  كلمة السر : " + string.Join(", ", result.Errors.Select(e => e.Description)));
+
+            }
+
+            return ResponseModel<Guid>.SuccessResponse(UserId, "تم تحديث  كلمة السر بنجاح");
+        }
 
 
         // ✅ 4. تعديل بيانات معلم
@@ -168,9 +191,14 @@ namespace TrainingCenterAPI.Services.Implementations
             if (teacher == null)
                 return ResponseModel<Guid>.FailResponse("المعلم غير موجود");
 
+
+
+
+
             teacher.User.FullName = teacherDto.FullName;
             teacher.User.Email = teacherDto.Email;
             teacher.User.PhoneNumber = teacherDto.PhoneNumber;
+            teacher.User.Password = teacherDto.Password;
             teacher.City = teacherDto.City;
             teacher.CourseId = teacherDto.CourseId;
             //   teacher.CourseName = teacherDto.CourseName;
@@ -279,6 +307,7 @@ namespace TrainingCenterAPI.Services.Implementations
                      Email = t.User.Email,
                      City = t.City,
                      PhoneNumber = t.User.PhoneNumber,
+                     Password = t.User.Password,
                      CourseName = t.Course.Name,
                      CourseId = t.CourseId
                  })
@@ -297,8 +326,6 @@ namespace TrainingCenterAPI.Services.Implementations
 
 
         }
-
-
 
 
 

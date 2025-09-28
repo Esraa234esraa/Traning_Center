@@ -13,7 +13,7 @@ namespace TrainingCenterAPI.Services.Teacher
         Task<ResponseModel<Guid>> UpdateTeacherAsync(Guid teacherId, UpdateTeacherDto teacherDto);
         Task<ResponseModel<bool>> DeleteTeacherAsync(Guid teacherId);
 
-
+        Task<ResponseModel<Guid>> ResetPassword(Guid UserId, string Password);
         Task<ResponseModel<TeacherViewDTO>> GetProfileTeacherWithClassesAsync(Guid teacherId);
         Task<ResponseModel<TeacherByIdDTO>> GetTeacherById(Guid teacherId);
 

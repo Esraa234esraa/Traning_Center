@@ -86,56 +86,17 @@ namespace TrainingCenterAPI.Controllers
             return await _teacherService.DeleteTeacherAsync(teacherId);
         }
 
+        [HttpPut("ResetPassword/{teacherId}")]
+        public async Task<ActionResult<ResponseModel<Guid>>> ResetPassword(Guid teacherId, string password)
+        {
+            return await _teacherService.ResetPassword(teacherId, password);
+        }
 
 
 
 
 
 
-
-        //        // ✅ 1. جلب كل المعلمين
-        //        [HttpGet("all")]
-        //        public async Task<ActionResult<ResponseModel<List<TeacherWithClassesDto>>>> GetAllTeachers()
-        //        {
-        //            return await _teacherService.GetAllTeachersAsync();
-        //        }
-
-        //        // ✅ 2. جلب معلم واحد
-        //        [HttpGet("{teacherId}")]
-        //        public async Task<ActionResult<ResponseModel<TeacherWithClassesDto>>> GetTeacherById(Guid teacherId)
-        //        {
-        //            return await _teacherService.GetTeacherByIdAsync(teacherId);
-        //        }
-
-        // ✅ 3. إضافة معلم جديد
-
-
-
-        //        [HttpPost("login")]
-        //        public async Task<IActionResult> Login([FromBody] TeacherLoginRequest request)
-        //        {
-        //            var response = await _teacherService.LoginTeacherAsync(request.Email, request.Password);
-        //            if (!response.Success)
-        //                return BadRequest(response);
-
-        //            return Ok(response);
-        //        }
-
-
-        //        // ✅ 4. تعديل بيانات معلم
-        //        [HttpPut("{teacherId}")]
-
-
-
-
-
-
-        //        // ✅ 7. جلب كل الطلاب لكل حصص المعلم
-        //        [HttpGet("{teacherId}/students")]
-        //        public async Task<ActionResult<ResponseModel<AllStudentsForTeacherDto>>> GetAllStudentsByTeacher(Guid teacherId)
-        //        {
-        //            return await _teacherService.GetAllStudentsByTeacherIdAsync(teacherId);
-        //        }
     }
 
 
