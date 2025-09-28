@@ -15,6 +15,7 @@ namespace TrainingCenterAPI.Services.Teacher
 
         Task<ResponseModel<Guid>> ResetPassword(Guid UserId, string Password);
         Task<ResponseModel<TeacherViewDTO>> GetProfileTeacherWithClassesAsync(Guid teacherId);
+        Task<ResponseModel<TeacherViewDTO>> GetProfileTeacherWithClassesAsyncByAdmin(Guid teacherId);
         Task<ResponseModel<TeacherByIdDTO>> GetTeacherById(Guid teacherId);
 
 

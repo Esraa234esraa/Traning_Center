@@ -59,6 +59,12 @@ namespace TrainingCenterAPI.Controllers
         {
             return await _teacherService.GetProfileTeacherWithClassesAsync(teacherId);
         }
+
+        [HttpGet("GetProfileTeacherWithClassesAsyncByAdmin/{teacherId}")]
+        public async Task<ActionResult<ResponseModel<TeacherViewDTO>>> GetProfileTeacherWithClassesAsyncByAdmin(Guid teacherId)
+        {
+            return await _teacherService.GetProfileTeacherWithClassesAsyncByAdmin(teacherId);
+        }
         [HttpGet("GetTeacherById/{teacherId}")]
         public async Task<ActionResult<ResponseModel<TeacherByIdDTO>>> GetTeacherById(Guid teacherId)
         {
