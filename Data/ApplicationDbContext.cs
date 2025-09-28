@@ -19,6 +19,8 @@ namespace TrainingCenterAPI.Data
         // جداول
         public DbSet<TeacherDetails> TeacherDetails { get; set; }
         public DbSet<OtpVerification> OtpVerifications { get; set; }
+        public DbSet<EmailVerification> EmailVerifications { get; set; }
+
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Classes> Classes { get; set; }
 

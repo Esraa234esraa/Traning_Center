@@ -9,10 +9,13 @@ namespace TrainingCenterAPI.Services.BasketServices
     public class BasketServices : IBasketServices
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BasketServices(ApplicationDbContext context)
+
+        public BasketServices(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesDelete()
@@ -185,5 +188,148 @@ namespace TrainingCenterAPI.Services.BasketServices
 
             return ResponseModel<List<GetAllNewStudentDTO>>.SuccessResponse(newStudents, "  تم رجوع الطلاب قائمة  الانتظار  بنجاح محذوفة");
         }
+
+        //final delete teacher
+        public async Task<ResponseModel<bool>> DeleteTeacherAsyncDelete(Guid teacherId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+
+            try
+            {
+                var teacher = await _context.TeacherDetails
+                    .Include(t => t.User)
+                    .FirstOrDefaultAsync(t => t.Id == teacherId && t.IsDeleted == true);
+
+                if (teacher == null)
+                {
+
+                    return ResponseModel<bool>.FailResponse("هذا المعلم غير موجود في في سلة المهملات ");
+                }
+                _context.TeacherDetails.Remove(teacher);
+                await _userManager.DeleteAsync(teacher.User);
+
+
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+
+                return ResponseModel<bool>.SuccessResponse(true, "تم حذف المعلم نهائي بنجاح");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return ResponseModel<bool>.FailResponse($"{ex.Message} فشل الحذف");
+            }
+        }
+
+        public async Task<ResponseModel<string>> DeleteNewStudentDelete(Guid Id)
+        {
+            var student = await _context.newStudents.FirstOrDefaultAsync(x => x.Id == Id && x.IsDeleted == true);
+
+            if (student == null)
+            {
+
+                return ResponseModel<string>.FailResponse("هذا الطالب غير موجود في في سلة المهملات");
+            }
+
+            _context.newStudents.Remove(student);
+            await _context.SaveChangesAsync();
+            return ResponseModel<string>.SuccessResponse(" تم حذف  الطالب نهائي");
+        }
+
+        public async Task<ResponseModel<string>> DeleteWaitingStudentDelete(Guid Id)
+        {
+            var student = await _context.newStudents.FirstOrDefaultAsync(x => x.Id == Id && x.status == NewStudentStatus.waiting && x.IsDeleted == true);
+            if (student == null)
+            {
+
+                return ResponseModel<string>.FailResponse("هذا الطالب غير موجود في في سلة المهملات ");
+            }
+
+            student.IsDeleted = true;
+            _context.newStudents.Update(student);
+            await _context.SaveChangesAsync();
+            return ResponseModel<string>.SuccessResponse(" تم نقل الطالب نهائي");
+        }
+
+        public async Task<ResponseModel<bool>> DeleteCurrentStudentDelete(Guid Id)
+        {
+            try
+            {
+                var student = await _context.currents
+            .Include(s => s.GetCurrentStudentClasses) // تحميل العلاقات
+             .FirstOrDefaultAsync(s => s.Id == Id);
+
+                if (student == null)
+                    return ResponseModel<bool>.FailResponse("الطالب  غير موجود في في سلة المهملات");
+                // 👇 Soft delete
+                student.DeletedAt = DateTime.UtcNow;
+                student.IsDeleted = true;
+
+
+                // Soft delete للعلاقات
+                foreach (var sc in student.GetCurrentStudentClasses)
+                {
+                    _context.CurrentStudentClasses.Remove(sc);
+                }
+                _context.currents.Update(student);
+                await _context.SaveChangesAsync();
+                return ResponseModel<bool>.SuccessResponse(true, "نم حذف الطالب نهائي ");
+            }
+            catch (Exception ex)
+            {
+
+                return ResponseModel<bool>.FailResponse($"{ex.Message}  فشلت عملية الحذف ");
+
+            }
+        }
+
+        public async Task<ResponseModel<bool>> DeleteCourseAsyncDelete(Guid id)
+        {
+            try
+            {
+                var course = await _context.Course.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == true);
+                if (course == null)
+                    return ResponseModel<bool>.FailResponse("الدراسة غير موجود في في سلة المهملات");
+
+                // 👇 Soft delete
+
+                _context.Course.Remove(course);
+                await _context.SaveChangesAsync();
+                return ResponseModel<bool>.SuccessResponse(true, "نم حذف الدراسة نهائي");
+            }
+            catch (Exception ex)
+            {
+
+                return ResponseModel<bool>.FailResponse($"{ex.Message}  فشلت عملية الحذف ");
+
+            }
+        }
+
+        public async Task<ResponseModel<bool>> DeleteClassDelete(Guid Id)
+        {
+            try
+            {
+                var Class = await _context.Classes.FirstOrDefaultAsync(x => x.Id == Id && x.IsDeleted == true);
+                if (Class == null)
+                    return ResponseModel<bool>.FailResponse("الحصةغير موجود في في سلة المهملات");
+
+
+                _context.Classes.Remove(Class);
+                await _context.SaveChangesAsync();
+                return ResponseModel<bool>.SuccessResponse(true, "نم حذف    الحصة   نهائي");
+            }
+            catch (Exception ex)
+            {
+
+                return ResponseModel<bool>.FailResponse($"{ex.Message}  فشلت عملية الحذف ");
+
+            }
+        }
+
+
     }
 }

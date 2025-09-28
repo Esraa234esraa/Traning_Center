@@ -1,11 +1,11 @@
-﻿//using TrainingCenterAPI.Models;
+﻿namespace TrainingCenterAPI.Services.Auth
+{
+    public interface IOtpService
+    {
 
-//namespace TrainingCenterAPI.Services.Auth
-//{
-//    public interface IOtpService
-//    {
-//        Task GenerateAndSendOtpAsync(Guid userId, string destinationEmailOrPhone, bool useSms = false);
-//        Task<VerifyResult> VerifyOtpAsync(Guid userId, string code);
-//        Task ResendOtpAsync(Guid userId, string destination, bool useSms = false);
-//    }
-//}
+        public Task<string> GenerateOtp();
+        public Task SendVerificationEmailAsync(string toEmail, string otp);
+        public bool VerifyEmail(string email, string inputOtp, EmailVerification storedOtp);
+
+    }
+}

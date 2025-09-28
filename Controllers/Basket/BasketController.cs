@@ -58,5 +58,51 @@ namespace TrainingCenterAPI.Controllers.Basket
 
             return Ok(response);
         }
+        [HttpDelete("DeleteNewStudentDelete/{Id}")]
+        public async Task<IActionResult> DeleteNewStudentDelete(Guid Id)
+        {
+
+            return Ok(await _basketServices.DeleteNewStudentDelete(Id));
+        }
+
+
+        [HttpDelete("DeleteWaitingStudentDelete/{Id}")]
+        public async Task<IActionResult> DeleteWaitingStudentDelete(Guid Id)
+        {
+
+            return Ok(await _basketServices.DeleteWaitingStudentDelete(Id));
+        }
+
+        [HttpDelete("DeleteCurrentStudentDelete/{Id}")]
+        public async Task<IActionResult> DeleteCurrentStudentDelete(Guid Id)
+        {
+            var result = await _basketServices.DeleteCurrentStudentDelete(Id);
+
+
+            return Ok(result);
+        }
+
+        [HttpDelete("DeleteTeacherDelete/{teacherId}")]
+        public async Task<ActionResult<ResponseModel<bool>>> DeleteTeacherDelete(Guid teacherId)
+        {
+            return await _basketServices.DeleteTeacherAsyncDelete(teacherId);
+        }
+
+        [HttpDelete("DeleteCourseDelete{id}")]
+        public async Task<IActionResult> DeleteCourseDelete(Guid id)
+        {
+            var result = await _basketServices.DeleteCourseAsyncDelete(id);
+
+            return Ok(result);
+
+        }
+
+        [HttpDelete("DeleteClassDelete/{Id}")]
+        public async Task<IActionResult> DeleteClassDelete(Guid Id)
+        {
+            var result = await _basketServices.DeleteClassDelete(Id);
+            return Ok(result);
+        }
+
     }
 }
