@@ -1,4 +1,5 @@
-﻿using TrainingCenterAPI.DTOs.Teacher.CLassesToTeacher;
+﻿using TrainingCenterAPI.DTOs.Classes;
+using TrainingCenterAPI.DTOs.Teacher.CLassesToTeacher;
 using TrainingCenterAPI.DTOs.Teacher.ViewMyClasses;
 using TrainingCenterAPI.Services.Teacher;
 
@@ -381,8 +382,34 @@ $"⚠️ اسم المستخدم وكلمة السر سري للغاية"
             }
 
         }
-    }
 
+        public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesForTeacher(Guid TeacherId)
+        {
+            var Levels = await _context.Classes.Include(x => x.Bouquet).Include(x => x.Teacher.User).AsNoTracking()
+                .Where(x => x.IsDeleted == false && x.Teacher.User.Id == TeacherId)
+
+                .Select(x => new GetAllClassesOfBouquetDTO
+                {
+                    Id = x.Id,
+                    TeacherId = x.TeacherId,
+                    BouquetName = x.Bouquet.BouquetName,
+                    BouquetCount = x.Bouquet.StudentsPackageCount,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    ClassTime = x.ClassTime,
+                    BouquetId = x.BouquetId,
+                    CurrentStudentsCount = x.CurrentStudentsCount,
+                    Status = x.Status
+
+                }).ToListAsync();
+
+            if (Levels.Count() <= 0)
+                return ResponseModel<List<GetAllClassesOfBouquetDTO>>.FailResponse("لا توجد حصص اضيفت لهذا المعلم ");
+
+            return ResponseModel<List<GetAllClassesOfBouquetDTO>>.SuccessResponse(Levels, "Classes fot teacher retrieved successfully");
+        }
+
+    }
 }
 
 

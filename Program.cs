@@ -1,6 +1,7 @@
 ﻿using TrainingCenterAPI.Services.BasketServices;
 using TrainingCenterAPI.Services.ClassesServeice;
 using TrainingCenterAPI.Services.CurretnStudentsService;
+using TrainingCenterAPI.Services.ExternalCoursesServices;
 using TrainingCenterAPI.Services.Implementations;
 using TrainingCenterAPI.Services.Teacher;
 
@@ -63,6 +64,7 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<INewStudentsService, NewStudentsService>();
 builder.Services.AddScoped<IEvaluationService, EvaluationService>();
 builder.Services.AddScoped<ICoursesServices, CoursesService>();
+builder.Services.AddScoped<IExternalCoursesServices, ExternalCoursesServices>();
 builder.Services.AddScoped<ILevelService, LevelService>();
 builder.Services.AddScoped<IBouquetService, BouquetService>();
 builder.Services.AddScoped<IClassService, ClassService>();
