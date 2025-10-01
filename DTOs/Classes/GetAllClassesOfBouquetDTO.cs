@@ -7,7 +7,7 @@ namespace TrainingCenterAPI.DTOs.Classes
         public Guid Id { get; set; }
 
         public Guid? TeacherId { get; set; }
-
+        public int BouquetCount { get; set; }
         public int CurrentStudentsCount { get; set; }
 
         [Required]

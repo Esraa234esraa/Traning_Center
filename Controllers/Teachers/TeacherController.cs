@@ -3,6 +3,7 @@
 //using TrainingCenterAPI.Responses;
 //using TrainingCenterAPI.Services.Teacher;
 
+using TrainingCenterAPI.DTOs.Classes;
 using TrainingCenterAPI.DTOs.Teacher.CLassesToTeacher;
 using TrainingCenterAPI.DTOs.Teacher.ViewMyClasses;
 using TrainingCenterAPI.Services.Teacher;
@@ -58,6 +59,17 @@ namespace TrainingCenterAPI.Controllers
         public async Task<ActionResult<ResponseModel<TeacherViewDTO>>> GetProfileTeacherWithClasses(Guid teacherId)
         {
             return await _teacherService.GetProfileTeacherWithClassesAsync(teacherId);
+        }
+
+        [HttpGet("GetProfileTeacherWithClassesAsyncByAdmin/{teacherId}")]
+        public async Task<ActionResult<ResponseModel<TeacherViewDTO>>> GetProfileTeacherWithClassesAsyncByAdmin(Guid teacherId)
+        {
+            return await _teacherService.GetProfileTeacherWithClassesAsyncByAdmin(teacherId);
+        }
+        [HttpGet("GetAllClassesForTeacher/{teacherId}")]
+        public async Task<ActionResult<ResponseModel<List<GetAllClassesOfBouquetDTO>>>> GetAllClassesForTeacher(Guid teacherId)
+        {
+            return await _teacherService.GetAllClassesForTeacher(teacherId);
         }
         [HttpGet("GetTeacherById/{teacherId}")]
         public async Task<ActionResult<ResponseModel<TeacherByIdDTO>>> GetTeacherById(Guid teacherId)

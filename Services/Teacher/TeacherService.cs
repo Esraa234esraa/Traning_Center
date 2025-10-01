@@ -1,4 +1,5 @@
-﻿using TrainingCenterAPI.DTOs.Teacher.CLassesToTeacher;
+﻿using TrainingCenterAPI.DTOs.Classes;
+using TrainingCenterAPI.DTOs.Teacher.CLassesToTeacher;
 using TrainingCenterAPI.DTOs.Teacher.ViewMyClasses;
 using TrainingCenterAPI.Services.Teacher;
 
@@ -176,6 +177,15 @@ namespace TrainingCenterAPI.Services.Implementations
                 return ResponseModel<Guid>.FailResponse("فشل تحديث  كلمة السر : " + string.Join(", ", result.Errors.Select(e => e.Description)));
 
             }
+            await email.SendEmailAsync(
+user.Email,
+"دوام",
+$" لقد تم  تغير كلمة المرور نتمنى لك التوفيق والنجاح.{Environment.NewLine}{Environment.NewLine}" +
+$"  كلمة السر هي:{Environment.NewLine}" +
+
+$"Password: {Password}{Environment.NewLine}{Environment.NewLine}" +
+$"⚠️ اسم المستخدم وكلمة السر سري للغاية"
+);
 
             return ResponseModel<Guid>.SuccessResponse(UserId, "تم تحديث  كلمة السر بنجاح");
         }
@@ -327,12 +337,79 @@ namespace TrainingCenterAPI.Services.Implementations
 
         }
 
+        public async Task<ResponseModel<TeacherViewDTO>> GetProfileTeacherWithClassesAsyncByAdmin(Guid teacherId)
+        {
+            try
+            {
+                var teacher = await _context.TeacherDetails.Include(x => x.User)
+                .Where(t => t.User.Id == teacherId && t.IsDeleted != true)
+                 .Select(t => new TeacherViewDTO
+                 {
+                     Id = t.Id,
+                     CourseName = t.Course.Name,
 
+                     Classes = t.Classes.Select(c => new TeacherClassDtoView
+                     {
+                         Id = c.Id,
+                         LevelNumber = c.Bouquet.Level.LevelNumber,
+                         LevelName = c.Bouquet.Level.Name ?? "not add name",
+                         PackageSize = c.Bouquet.StudentsPackageCount,
+                         CurrentStudentsCount = c.GetCurrentStudentClasses.Count(),
+                         Status = c.Status,
+                         ClassTime = c.ClassTime,
+                         StartDate = c.StartDate,
+                         EndDate = c.EndDate,
 
+                         Students = c.GetCurrentStudentClasses
+               .Select(cs => new CurrentStudentForTeacherDTO
+               {
+                   // 👈 مش StudentName
+                   StudentId = cs.Student.Id,
+                   FullName = cs.Student.StudentName,
 
+               }).ToList()
+                     }).ToList()
+                 })
+                   .FirstOrDefaultAsync();
+                if (teacher == null)
+                    return ResponseModel<TeacherViewDTO>.FailResponse("هذ المعلم غير موجود");
+
+                return ResponseModel<TeacherViewDTO>.SuccessResponse(teacher, "تم جلب بيانات المعلم وحصصه");
+            }
+            catch (Exception ex)
+            {
+                return ResponseModel<TeacherViewDTO>.FailResponse($"{ex.Message} حدث خطاء ");
+            }
+
+        }
+
+        public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClassesForTeacher(Guid TeacherId)
+        {
+            var Levels = await _context.Classes.Include(x => x.Bouquet).Include(x => x.Teacher.User).AsNoTracking()
+                .Where(x => x.IsDeleted == false && x.Teacher.User.Id == TeacherId)
+
+                .Select(x => new GetAllClassesOfBouquetDTO
+                {
+                    Id = x.Id,
+                    TeacherId = x.TeacherId,
+                    BouquetName = x.Bouquet.BouquetName,
+                    BouquetCount = x.Bouquet.StudentsPackageCount,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    ClassTime = x.ClassTime,
+                    BouquetId = x.BouquetId,
+                    CurrentStudentsCount = x.CurrentStudentsCount,
+                    Status = x.Status
+
+                }).ToListAsync();
+
+            if (Levels.Count() <= 0)
+                return ResponseModel<List<GetAllClassesOfBouquetDTO>>.FailResponse("لا توجد حصص اضيفت لهذا المعلم ");
+
+            return ResponseModel<List<GetAllClassesOfBouquetDTO>>.SuccessResponse(Levels, "Classes fot teacher retrieved successfully");
+        }
 
     }
-
 }
 
 
