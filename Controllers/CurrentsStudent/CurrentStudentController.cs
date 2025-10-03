@@ -40,6 +40,14 @@ namespace TrainingCenterAPI.Controllers.CurrentsStudent
 
             return Ok(result);
         }
+        [HttpGet("GetCurrentStudentById/{Id}")]
+        public async Task<IActionResult> GetCurrentStudentById(Guid Id)
+        {
+            var result = await _currentStudentService.GetCurrentStudentById(Id);
+
+
+            return Ok(result);
+        }
         [HttpPut("UpdateCurrentStudent/{Id}")]
         public async Task<IActionResult> UpdateCurrentStudent(Guid Id, [FromForm] UpdateCurrentStudentDTO dto)
         {
