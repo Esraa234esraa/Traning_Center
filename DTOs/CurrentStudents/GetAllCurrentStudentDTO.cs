@@ -10,7 +10,7 @@
         public string? City { get; set; }
         public required string PhoneNumber { get; set; }
 
-        public bool IsPaid { get; set; } = false;
+        public bool IsPaid { get; set; }
         public string? BouquetName { get; set; }
         public string? CourseName { get; set; }
         public int BouquetNumber { get; set; }

@@ -84,6 +84,29 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
                 return ResponseModel<Guid>.FailResponse($"{ex.Message}فشلت الاضافة  ");
             }
         }
+        public async Task<ResponseModel<List<GetAllCurrentStudentDTOByClassId>>> GetAllCurrentStudentByClassId(Guid classId)
+        {
+
+
+            var students = await _context.currents
+                 .AsNoTracking()
+                   .Where(x => x.IsDeleted == false && x.GetCurrentStudentClasses.Any(c => c.ClassId == classId))
+
+                   .Select(x => new GetAllCurrentStudentDTOByClassId
+                   {
+                       Id = x.Id,
+                       StudentName = x.StudentName,
+                       City = x.City,
+                       PhoneNumber = x.PhoneNumber,
+                       IsPaid = x.IsPaid
+                   }).ToListAsync();
+
+            if (students.Count() <= 0)
+                return ResponseModel<List<GetAllCurrentStudentDTOByClassId>>.FailResponse(" لا توجد طلاب اضيفت لهذا الكلاس");
+
+            return ResponseModel<List<GetAllCurrentStudentDTOByClassId>>.SuccessResponse(students, "students retrieved successfully");
+
+        }
 
         public async Task<ResponseModel<ResponseDTO>> GetAllCurrentStudent(GetAllCurrentStudentQuery request)
         {
@@ -97,6 +120,16 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
                 filterConditions.Add(x => x.StudentName == request.SearchWord ||
                                           x.StudentName.Contains(request.SearchWord)
                                           , true);
+
+            }
+            if (request.IsPaid != 0)
+            {
+                if (request.IsPaid == Paid.Paid)
+                    filterConditions.Add(x => x.IsPaid == true, true);
+                else
+
+                    filterConditions.Add(x => x.IsPaid == false, true);
+
             }
 
             var Students = await _context.currents
@@ -127,9 +160,9 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
 
 
             if (Students.Count() <= 0)
-                return ResponseModel<ResponseDTO>.FailResponse("لا توجد حصص اضيفتة ");
+                return ResponseModel<ResponseDTO>.FailResponse("لا توجد طلاب اضيفتة ");
             _ResponseDTO.Result = Students;
-            return ResponseModel<ResponseDTO>.SuccessResponse(_ResponseDTO, "Classes retrieved successfully");
+            return ResponseModel<ResponseDTO>.SuccessResponse(_ResponseDTO, "CurrentStudents retrieved successfully");
         }
         public async Task<ResponseModel<Guid>> UpdateCurrentStudent(Guid Id, UpdateCurrentStudentDTO dTO)
         {

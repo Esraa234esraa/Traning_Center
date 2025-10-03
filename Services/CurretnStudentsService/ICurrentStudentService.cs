@@ -8,6 +8,7 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
         Task<ResponseModel<Guid>> UpdateCurrentStudent(Guid Id, UpdateCurrentStudentDTO dTO);
         Task<ResponseModel<bool>> DeleteCurrentStudent(Guid Id);
         Task<ResponseModel<ResponseDTO>> GetAllCurrentStudent(GetAllCurrentStudentQuery request);
+        Task<ResponseModel<List<GetAllCurrentStudentDTOByClassId>>> GetAllCurrentStudentByClassId(Guid classId);
 
 
     }

@@ -55,12 +55,29 @@ namespace TrainingCenterAPI.Services.NewStudentsService
                 await transaction.CommitAsync();
                 if (!string.IsNullOrEmpty(DTO.Email))
                 {
-                    await email.SendEmailAsync(DTO.Email, "Confirmation", $"    " +
-                   $" مرحبا بيك في مركز اللغة المثاليه لقد تم الحجز  " +
-                   $"التاريخ {Environment.NewLine}" +
-                   $"{newStudent.Date} " +
-                   $"الساعة  {Environment.NewLine}" +
-               $" {newStudent.Time}");
+                    string body = $@"
+<html>
+  <body style='font-family: Arial, sans-serif; line-height:1.8;'>
+    <p>عزيزي العميل،</p>
+    <p>نشكر لك حجز موعدك في <b>مركز اللغة المثالية للتدريب</b>!<br/>
+       لقد تم تأكيد موعدك بنجاح، ونحن متحمسون لاستقبالك.</p>
+
+    <p>
+      📅 <b>التاريخ:</b> {newStudent.Date:dd/MM/yyyy}<br/>
+      ⏰ <b>الساعة:</b> {newStudent.Time:hh:mm tt}
+    </p>
+
+    <p>إذا كان لديك أي استفسار أو رغبة في تعديل الموعد، لا تتردد في التواصل معنا.</p>
+
+    <p>مع أطيب التحيات،<br/>
+    <b>فريق مركز اللغة المثالية</b></p>
+  </body>
+</html>";
+
+                    await email.SendEmailAsync(DTO.Email, "تأكيد حجز", body);
+
+
+
                 }
 
 

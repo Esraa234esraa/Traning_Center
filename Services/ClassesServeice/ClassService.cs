@@ -64,12 +64,14 @@ namespace TrainingCenterAPI.Services.ClassesServeice
                 .Select(x => new GetAllClassesOfBouquetDTO
                 {
                     Id = x.Id,
+                    TeacherId = x.Teacher != null ? x.Teacher!.UserId : null,
                     BouquetName = x.Bouquet.BouquetName,
                     StartDate = x.StartDate,
                     EndDate = x.EndDate,
                     ClassTime = x.ClassTime,
                     BouquetId = x.BouquetId,
-                    CurrentStudentsCount = x.CurrentStudentsCount,
+                    CurrentStudentsCount = x.GetCurrentStudentClasses.Count(),
+                    BouquetCount = x.Bouquet.StudentsPackageCount,
                     Status = x.Status
 
                 }).ToListAsync();
