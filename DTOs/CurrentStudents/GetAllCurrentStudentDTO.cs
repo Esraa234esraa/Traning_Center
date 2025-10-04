@@ -16,6 +16,7 @@
         public int BouquetNumber { get; set; }
         public List<ClassForStudentDTO> Classes { get; set; } = new();
     }
+
     public class ClassForStudentDTO
     {
         public Guid ClassId { get; set; }

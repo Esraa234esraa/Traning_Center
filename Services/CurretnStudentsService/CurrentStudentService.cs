@@ -141,6 +141,7 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
             Id = x.Id,
             StudentName = x.StudentName,
             City = x.City,
+            Gender = x.Gender,
             PhoneNumber = x.PhoneNumber,
             IsPaid = x.IsPaid,
 
@@ -164,6 +165,42 @@ namespace TrainingCenterAPI.Services.CurretnStudentsService
             _ResponseDTO.Result = Students;
             return ResponseModel<ResponseDTO>.SuccessResponse(_ResponseDTO, "CurrentStudents retrieved successfully");
         }
+        public async Task<ResponseModel<ResponseDTO>> GetCurrentStudentById(Guid Id)
+        {
+            var Students = await _context.currents
+            .AsNoTracking()
+            .Where(x => !x.IsDeleted && x.Id == Id)
+
+        .Select(x => new GetAllCurrentStudentDTO
+        {
+            Id = x.Id,
+            StudentName = x.StudentName,
+            Gender = x.Gender,
+            City = x.City,
+            PhoneNumber = x.PhoneNumber,
+            IsPaid = x.IsPaid,
+
+            // 👇 كل الكلاسات اللي الطالب فيها
+            Classes = x.GetCurrentStudentClasses
+               .Select(cs => new ClassForStudentDTO
+               {
+                   ClassId = cs.Class.Id,
+                   BouquetName = cs.Class.Bouquet.BouquetName,
+                   BouquetNumber = cs.Class.Bouquet.StudentsPackageCount,
+                   CourseName = cs.Class.Bouquet.Course.Name,
+                   LevelNumber = cs.Class.Bouquet.Level.LevelNumber,
+                   LevelName = cs.Class.Bouquet.Level.Name
+               }).ToList()
+        })
+        .ToListAsync();
+
+
+            if (Students.Count() <= 0)
+                return ResponseModel<ResponseDTO>.FailResponse("لا توجد طالب اضيفتة ");
+            _ResponseDTO.Result = Students;
+            return ResponseModel<ResponseDTO>.SuccessResponse(_ResponseDTO, "CurrentStudent retrieved successfully");
+        }
+
         public async Task<ResponseModel<Guid>> UpdateCurrentStudent(Guid Id, UpdateCurrentStudentDTO dTO)
         {
 
