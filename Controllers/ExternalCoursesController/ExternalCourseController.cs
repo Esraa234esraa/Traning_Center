@@ -3,6 +3,8 @@ using TrainingCenterAPI.Services.ExternalCoursesServices;
 
 namespace TrainingCenterAPI.Controllers.ExternalExternalCoursesController
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ExternalCourseController : ControllerBase
     {
 
