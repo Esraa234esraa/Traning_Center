@@ -43,7 +43,7 @@ namespace TrainingCenterAPI.Services.CoursesServices
                     Description = courseDto.Description,
                     FilePath = imageUrl ?? "",
                     IsActive = true,
-                    IsVisible = true
+
 
                 };
                 _context.Course.Add(course);
@@ -70,7 +70,7 @@ namespace TrainingCenterAPI.Services.CoursesServices
                     Description = c.Description,
                     FilePath = c.FilePath,
                     IsActive = c.IsActive,
-                    IsVisible = c.IsVisible,
+
                     CreateAt = c.CreatedAt
 
                 })
@@ -80,29 +80,7 @@ namespace TrainingCenterAPI.Services.CoursesServices
 
             return ResponseModel<List<GetAllCoursesDto>>.SuccessResponse(courses, "Courses retrieved successfully");
         }
-        public async Task<ResponseModel<List<GetAllCoursesDto>>> GetOnlyVisibleCoursesAsync()
-        {
-            var courses = await _context.Course.Where(x => x.IsDeleted == false && x.IsVisible == true)
-                .OrderByDescending(x => x.CreatedAt)
-                .AsNoTracking()
 
-                .Select(c => new GetAllCoursesDto
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Description = c.Description,
-                    FilePath = c.FilePath,
-                    IsActive = c.IsActive,
-                    IsVisible = c.IsVisible,
-                    CreateAt = c.CreatedAt
-
-                })
-                .ToListAsync();
-            if (courses.Count() <= 0)
-                return ResponseModel<List<GetAllCoursesDto>>.FailResponse("لا توجد دراسة او دورات");
-
-            return ResponseModel<List<GetAllCoursesDto>>.SuccessResponse(courses, "Courses retrieved successfully");
-        }
         public async Task<ResponseModel<bool>> DeleteCourseAsync(Guid id)
         {
             try
@@ -128,54 +106,7 @@ namespace TrainingCenterAPI.Services.CoursesServices
 
 
         }
-        public async Task<ResponseModel<bool>> HideCourseAsync(Guid id)
-        {
-            try
-            {
-                var course = await _context.Course.FirstOrDefaultAsync(x => x.Id == id && x.IsVisible == true);
-                if (course == null)
-                    return ResponseModel<bool>.FailResponse("الدراسة ليست موجودة او ليست ظاهره ");
 
-                // 👇 Soft delete
-                course.UpdatedAt = DateTime.UtcNow;
-                course.IsVisible = false;
-                _context.Course.Update(course);
-                await _context.SaveChangesAsync();
-                return ResponseModel<bool>.SuccessResponse(true, "نم نقل الدراسة الى  المخفيات");
-            }
-            catch (Exception ex)
-            {
-
-                return ResponseModel<bool>.FailResponse($"{ex.Message}  فشلت عملية الخفي ");
-
-            }
-
-
-        }
-        public async Task<ResponseModel<bool>> VisibleCourseAsync(Guid id)
-        {
-            try
-            {
-                var course = await _context.Course.FirstOrDefaultAsync(x => x.Id == id && x.IsVisible == false);
-                if (course == null)
-                    return ResponseModel<bool>.FailResponse("الدراسة ليست موجودة او ليست مخفيه");
-
-                // 👇 Soft delete
-                course.UpdatedAt = DateTime.UtcNow;
-                course.IsVisible = true;
-                _context.Course.Update(course);
-                await _context.SaveChangesAsync();
-                return ResponseModel<bool>.SuccessResponse(true, "نم نقل الدراسة الى  الظهور");
-            }
-            catch (Exception ex)
-            {
-
-                return ResponseModel<bool>.FailResponse($"{ex.Message}  فشلت عملية الظهور ");
-
-            }
-
-
-        }
 
         public async Task<ResponseModel<Guid>> UpdateCourseAsync(Guid id, PutCourseDto courseDto)
         {

@@ -56,7 +56,7 @@ namespace TrainingCenterAPI.Services.BasketServices
                              Description = c.Description,
                              FilePath = c.FilePath,
                              IsActive = c.IsActive,
-                             IsVisible = c.IsVisible,
+
                              CreateAt = c.CreatedAt
 
                          })

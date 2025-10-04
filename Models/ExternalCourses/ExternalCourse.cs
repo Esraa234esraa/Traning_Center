@@ -8,6 +8,7 @@ namespace TrainingCenterAPI.Models.ExternalCourses
         public string Description { get; set; }
         public string FilePath { get; set; }
         public bool IsActive { get; set; } = true;
+        public bool IsVisible { get; set; } = true;
 
 
     }
