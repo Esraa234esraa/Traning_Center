@@ -1,5 +1,4 @@
 ﻿using TrainingCenterAPI.DTOs.Courses;
-using TrainingCenterAPI.Services.CoursesServices;
 
 namespace TrainingCenterAPI.Controllers.CoursesController
 {
@@ -30,14 +29,7 @@ namespace TrainingCenterAPI.Controllers.CoursesController
 
             return Ok(result);
         }
-        [HttpGet("GetOnlyVisibleCourses")]
-        public async Task<IActionResult> GetOnlyVisibleCourses()
-        {
-            var result = await _courseService.GetOnlyVisibleCoursesAsync();
 
-
-            return Ok(result);
-        }
 
         [HttpGet("GetCourseById/{Id}")]
         public async Task<IActionResult> GetCourseById(Guid Id)
@@ -65,24 +57,9 @@ namespace TrainingCenterAPI.Controllers.CoursesController
             return Ok(result);
 
         }
-        [HttpPut("HideCourse/{id}")]
 
-        public async Task<IActionResult> HideCourse(Guid id)
-        {
-            var result = await _courseService.HideCourseAsync(id);
 
-            return Ok(result);
 
-        }
-        [HttpPut("VisibleCourse/{id}")]
-
-        public async Task<IActionResult> VisibleCourse(Guid id)
-        {
-            var result = await _courseService.VisibleCourseAsync(id);
-
-            return Ok(result);
-
-        }
 
     }
 }

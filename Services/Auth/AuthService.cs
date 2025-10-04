@@ -174,8 +174,34 @@
                     PhoneNumber = a.PhoneNumber,
                     CreatedAt = a.CreatedAt
                 }).ToList();
+            if (result == null)
+            {
+                return ResponseModel<List<AdminDto>>.FailResponse(" admins not found");
+            }
+
 
             return ResponseModel<List<AdminDto>>.SuccessResponse(result);
+        }
+        public async Task<ResponseModel<AdminDto>> GetAdminAsync(Guid Id)
+        {
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+            var result = admins
+                .Where(a => a.IsActive && a.Id == Id)
+                .Select(a => new AdminDto
+                {
+                    Id = a.Id,
+                    FullName = a.FullName,
+                    Email = a.Email,
+                    PhoneNumber = a.PhoneNumber,
+                    CreatedAt = a.CreatedAt
+                }).FirstOrDefault();
+            if (result == null)
+            {
+                return ResponseModel<AdminDto>.FailResponse("this admin not found");
+            }
+
+            return ResponseModel<AdminDto>.SuccessResponse(result);
         }
         public async Task<ResponseModel<UpdateAdminDto>> UpdateAdminAsync(Guid id, UpdateAdminDto model)
         {

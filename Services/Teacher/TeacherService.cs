@@ -430,7 +430,7 @@ $"⚠️ اسم المستخدم وكلمة السر سري للغاية"
                     EndDate = x.EndDate,
                     ClassTime = x.ClassTime,
                     BouquetId = x.BouquetId,
-                    CurrentStudentsCount = x.CurrentStudentsCount,
+                    CurrentStudentsCount = x.GetCurrentStudentClasses.Count(),
                     Status = x.Status
 
                 }).ToListAsync();

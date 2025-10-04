@@ -3,12 +3,12 @@ using TrainingCenterAPI.Services.ExternalCoursesServices;
 
 namespace TrainingCenterAPI.Controllers.ExternalExternalCoursesController
 {
-    public class ExternalExternalCourseController : ControllerBase
+    public class ExternalCourseController : ControllerBase
     {
 
         private readonly IExternalCoursesServices _courseService;
 
-        public ExternalExternalCourseController(IExternalCoursesServices courseService)
+        public ExternalCourseController(IExternalCoursesServices courseService)
         {
             _courseService = courseService;
         }
@@ -29,11 +29,37 @@ namespace TrainingCenterAPI.Controllers.ExternalExternalCoursesController
             return Ok(result);
         }
 
+        [HttpGet("GetOnlyVisibleExternalCoursesAsync")]
+        public async Task<IActionResult> GetOnlyVisibleExternalCoursesAsync()
+        {
+            var result = await _courseService.GetOnlyVisibleExternalCoursesAsync();
+
+
+            return Ok(result);
+        }
 
         [HttpGet("GetExternalCourseById/{Id}")]
         public async Task<IActionResult> GetExternalCourseById(Guid Id)
         {
             var result = await _courseService.GetExternalCourseByIdAsync(Id);
+
+
+            return Ok(result);
+        }
+
+        [HttpGet("HideExternalCourseAsync/{Id}")]
+        public async Task<IActionResult> HideExternalCourseAsync(Guid Id)
+        {
+            var result = await _courseService.HideExternalCourseAsync(Id);
+
+
+            return Ok(result);
+        }
+
+        [HttpGet("VisibleExternalCourseAsync/{Id}")]
+        public async Task<IActionResult> VisibleExternalCourseAsync(Guid Id)
+        {
+            var result = await _courseService.VisibleExternalCourseAsync(Id);
 
 
             return Ok(result);
