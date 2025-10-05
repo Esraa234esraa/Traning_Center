@@ -49,7 +49,7 @@ namespace TrainingCenterAPI.Controllers.ExternalExternalCoursesController
             return Ok(result);
         }
 
-        [HttpGet("HideExternalCourseAsync/{Id}")]
+        [HttpPut("HideExternalCourseAsync/{Id}")]
         public async Task<IActionResult> HideExternalCourseAsync(Guid Id)
         {
             var result = await _courseService.HideExternalCourseAsync(Id);
@@ -58,7 +58,7 @@ namespace TrainingCenterAPI.Controllers.ExternalExternalCoursesController
             return Ok(result);
         }
 
-        [HttpGet("VisibleExternalCourseAsync/{Id}")]
+        [HttpPut("VisibleExternalCourseAsync/{Id}")]
         public async Task<IActionResult> VisibleExternalCourseAsync(Guid Id)
         {
             var result = await _courseService.VisibleExternalCourseAsync(Id);

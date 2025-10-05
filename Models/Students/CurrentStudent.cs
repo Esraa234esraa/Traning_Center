@@ -1,4 +1,5 @@
 ﻿using TrainingCenterAPI.Models.BaseEntitys;
+using TrainingCenterAPI.Models.Notes;
 
 namespace TrainingCenterAPI.Models.Students
 {
@@ -15,6 +16,7 @@ namespace TrainingCenterAPI.Models.Students
 
         public bool IsPaid { get; set; } = false;
         public virtual ICollection<CurrentStudentClass> GetCurrentStudentClasses { get; set; } = new HashSet<CurrentStudentClass>();
+        public virtual ICollection<Note> notes { get; set; } = new HashSet<Note>();
 
 
 
