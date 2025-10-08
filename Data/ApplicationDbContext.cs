@@ -4,6 +4,7 @@ using TrainingCenterAPI.Models.Bouquets;
 using TrainingCenterAPI.Models.Courses;
 using TrainingCenterAPI.Models.evaluations;
 using TrainingCenterAPI.Models.ExternalCourses;
+using TrainingCenterAPI.Models.Notes;
 using TrainingCenterAPI.Models.Students;
 
 namespace TrainingCenterAPI.Data
@@ -24,6 +25,7 @@ namespace TrainingCenterAPI.Data
 
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Classes> Classes { get; set; }
+        public DbSet<Note> notes { get; set; }
 
 
 

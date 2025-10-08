@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainingCenterAPI.Data;
 
@@ -11,9 +12,11 @@ using TrainingCenterAPI.Data;
 namespace TrainingCenterAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251005052302_AddNote")]
+    partial class AddNote
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("levels", (string)null);
+                    b.ToTable("levels");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -220,7 +223,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("OtpVerifications", (string)null);
+                    b.ToTable("OtpVerifications");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.ApplicationUser", b =>
@@ -347,7 +350,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.Bouquets.Bouquet", b =>
@@ -389,7 +392,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasIndex("LevelId");
 
-                    b.ToTable("bouquets", (string)null);
+                    b.ToTable("bouquets");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.Classes", b =>
@@ -437,7 +440,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Classes", (string)null);
+                    b.ToTable("Classes");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.Courses.Course", b =>
@@ -475,7 +478,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Course", (string)null);
+                    b.ToTable("Course");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.EmailVerification", b =>
@@ -500,7 +503,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailVerifications", (string)null);
+                    b.ToTable("EmailVerifications");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.ExternalCourses.ExternalCourse", b =>
@@ -541,7 +544,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ExternalCourses", (string)null);
+                    b.ToTable("ExternalCourses");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.Notes.Note", b =>
@@ -573,7 +576,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasIndex("CurrentStudentId");
 
-                    b.ToTable("notes", (string)null);
+                    b.ToTable("notes");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.Students.CurrentStudent", b =>
@@ -616,7 +619,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("currents", (string)null);
+                    b.ToTable("currents");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.Students.CurrentStudentClass", b =>
@@ -652,7 +655,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("CurrentStudentClasses", (string)null);
+                    b.ToTable("CurrentStudentClasses");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.Students.NewStudent", b =>
@@ -701,7 +704,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("newStudents", (string)null);
+                    b.ToTable("newStudents");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.TeacherDetails", b =>
@@ -747,7 +750,7 @@ namespace TrainingCenterAPI.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("TeacherDetails", (string)null);
+                    b.ToTable("TeacherDetails");
                 });
 
             modelBuilder.Entity("TrainingCenterAPI.Models.evaluations.Evaluation", b =>
@@ -787,7 +790,7 @@ namespace TrainingCenterAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("evaluations", (string)null);
+                    b.ToTable("evaluations");
                 });
 
             modelBuilder.Entity("Level", b =>

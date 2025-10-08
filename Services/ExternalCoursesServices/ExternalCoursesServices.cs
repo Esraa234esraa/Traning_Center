@@ -60,7 +60,7 @@ namespace TrainingCenterAPI.Services.ExternalCoursesServices
         }
         public async Task<ResponseModel<List<GetAllCoursesDto>>> GetAllExternalCoursesAsync()
         {
-            var courses = await _context.ExternalCourses.Where(x => x.IsDeleted == false && x.IsVisible == true)
+            var courses = await _context.ExternalCourses.Where(x => x.IsDeleted == false)
                 .OrderByDescending(x => x.CreatedAt)
                 .AsNoTracking()
 
