@@ -132,14 +132,8 @@ namespace TrainingCenterAPI.Services.NotesServices
                    Id = s.Id,
                    StudentName = s.StudentName
                })
-                  .Union(
-                          _context.newStudents.Where(x => x.IsDeleted == false && x.status == Enums.Enums.NewStudentStatus.waiting).AsNoTracking()
-               .Select(ns => new GetNotesDto
-               {
-                   Id = ns.Id,
-                   StudentName = ns.StudentName
-               })
-                                       )
+
+
                                     .ToListAsync();
             if (result.Count() <= 0)
                 return ResponseModel<List<GetNotesDto>>.FailResponse("  لا توجد ");
