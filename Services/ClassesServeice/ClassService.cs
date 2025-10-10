@@ -57,8 +57,9 @@ namespace TrainingCenterAPI.Services.ClassesServeice
         }
         public async Task<ResponseModel<List<GetAllClassesOfBouquetDTO>>> GetAllClasses()
         {
+
             var Levels = await _context.Classes.Include(x => x.Bouquet).AsNoTracking()
-                .Where(x => x.IsDeleted == false
+                .Where(x => x.IsDeleted == false && x.EndDate >= DateTime.Now
 )
 
                 .Select(x => new GetAllClassesOfBouquetDTO

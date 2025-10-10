@@ -31,6 +31,14 @@ namespace TrainingCenterAPI.Controllers.Notes
 
             return Ok(result);
         }
+        [HttpGet("GetAllStudentsForNote")]
+        public async Task<IActionResult> GetAllStudentsForNote()
+        {
+            var result = await _notesService.GetAllStudentsForNote();
+
+
+            return Ok(result);
+        }
 
 
 
