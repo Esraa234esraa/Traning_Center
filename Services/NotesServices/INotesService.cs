@@ -6,7 +6,7 @@ namespace TrainingCenterAPI.Services.NotesServices
     {
         Task<ResponseModel<List<GetNotesDto>>> GetAllNotesAsync();
 
-
+        Task<ResponseModel<List<GetNotesDto>>> GetAllStudentsForNote();
 
         Task<ResponseModel<GetNotesDto>> GetNotesByIdAsync(Guid id);
         Task<ResponseModel<Guid>> AddNotesAsync(AddNoteDto courseDto);

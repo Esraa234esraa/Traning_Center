@@ -123,5 +123,29 @@ namespace TrainingCenterAPI.Services.NotesServices
                 return ResponseModel<Guid>.FailResponse($"{ex.Message}فشلت  التعديل   ");
             }
         }
+        public async Task<ResponseModel<List<GetNotesDto>>> GetAllStudentsForNote()
+        {
+            var result = await _context.currents.Where(x => x.IsDeleted == false)
+                      .AsNoTracking()
+               .Select(s => new GetNotesDto
+               {
+                   Id = s.Id,
+                   StudentName = s.StudentName
+               })
+                  .Union(
+                          _context.newStudents.Where(x => x.IsDeleted == false && x.status == Enums.Enums.NewStudentStatus.waiting).AsNoTracking()
+               .Select(ns => new GetNotesDto
+               {
+                   Id = ns.Id,
+                   StudentName = ns.StudentName
+               })
+                                       )
+                                    .ToListAsync();
+            if (result.Count() <= 0)
+                return ResponseModel<List<GetNotesDto>>.FailResponse("  لا توجد ");
+
+            return ResponseModel<List<GetNotesDto>>.SuccessResponse(result, " retrieved successfully");
+        }
+
     }
 }
