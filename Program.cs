@@ -3,6 +3,7 @@ using TrainingCenterAPI.Services.ClassesServeice;
 using TrainingCenterAPI.Services.CurretnStudentsService;
 using TrainingCenterAPI.Services.ExternalCoursesServices;
 using TrainingCenterAPI.Services.Implementations;
+using TrainingCenterAPI.Services.NewsServices;
 using TrainingCenterAPI.Services.NotesServices;
 using TrainingCenterAPI.Services.Teacher;
 
@@ -73,6 +74,7 @@ builder.Services.AddScoped<ICurrentStudentService, CurrentStudentService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<IBasketServices, BasketServices>();
 builder.Services.AddScoped<INotesService, NotesService>();
+builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddTransient<EmailService>();
 
 

@@ -4,6 +4,7 @@ using TrainingCenterAPI.Models.Bouquets;
 using TrainingCenterAPI.Models.Courses;
 using TrainingCenterAPI.Models.evaluations;
 using TrainingCenterAPI.Models.ExternalCourses;
+using TrainingCenterAPI.Models.New;
 using TrainingCenterAPI.Models.Notes;
 using TrainingCenterAPI.Models.Students;
 
@@ -35,6 +36,8 @@ namespace TrainingCenterAPI.Data
         public DbSet<Bouquet> bouquets { get; set; }
         public DbSet<Course> Course { get; set; }
         public DbSet<ExternalCourse> ExternalCourses { get; set; }
+        public DbSet<News> news { get; set; }
+
         public DbSet<CurrentStudent> currents { get; set; }
         public DbSet<CurrentStudentClass> CurrentStudentClasses { get; set; }
 

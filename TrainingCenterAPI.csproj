@@ -24,6 +24,7 @@
 	</ItemGroup>
 	<ItemGroup>
     <Folder Include="DTOs\Admin\NewFolder\" />
+    <Folder Include="wwwroot\NewsUploads\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
